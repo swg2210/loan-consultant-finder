@@ -487,5 +487,22 @@
       `;
     })();
   </script>
+
+  <!-- 데모 페이지 이동 (모바일 시연용) -->
+  <style>
+    .demo-nav { max-width: 390px; margin: 32px auto 24px; padding: 0 16px; }
+    .demo-nav__label { font-size: 11px; color: #9CA3AF; font-weight: 600; margin-bottom: 8px; text-align: center; letter-spacing: 0.04em; }
+    .demo-nav__btns { display: flex; gap: 8px; }
+    .demo-btn { flex: 1; padding: 14px; border-radius: 12px; background: #F3F4F6; color: #374151; font-size: 14px; font-weight: 700; text-align: center; text-decoration: none; font-family: 'Pretendard', sans-serif; transition: transform 150ms ease; }
+    .demo-btn--primary { background: #00DE5A; color: #1E1E23; }
+    .demo-btn:active { transform: scale(0.98); }
+  </style>
+  <nav class="demo-nav" aria-label="데모 페이지 이동">
+    <div class="demo-nav__label">— 데모 페이지 이동 —</div>
+    <div class="demo-nav__btns">
+      <a class="demo-btn" href="compare-result.html">주택담보대출 결과</a>
+      <a class="demo-btn demo-btn--primary" href="index.html">상담사 찾기 메인</a>
+    </div>
+  </nav>
 </body>
 </html>
