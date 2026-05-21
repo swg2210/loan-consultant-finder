@@ -161,7 +161,7 @@ html, body {
 
     <div class="section-label">유입지점 선택</div>
     <div class="entries">
-      <button class="entry" data-href="property-detail.html?id=jaie">
+      <button class="entry" data-href="property-detail.html?id=jaie" data-targets="#ctaConsultants">
         <span class="entry__num">1</span>
         <span class="entry__body">
           <span class="entry__title">부동산 매물 상세</span>
@@ -170,7 +170,7 @@ html, body {
         <span class="entry__arrow">›</span>
       </button>
 
-      <button class="entry" data-href="compare-main.html">
+      <button class="entry" data-href="compare-main.html" data-targets=".consult-strip">
         <span class="entry__num">2</span>
         <span class="entry__body">
           <span class="entry__title">주택담보대출 비교 메인</span>
@@ -179,7 +179,7 @@ html, body {
         <span class="entry__arrow">›</span>
       </button>
 
-      <button class="entry" data-href="compare-result.html">
+      <button class="entry" data-href="compare-result.html" data-targets=".consult-after-prop,.split-banner .is-consult,.consult-callout">
         <span class="entry__num">3</span>
         <span class="entry__body">
           <span class="entry__title">주택담보대출 비교 결과</span>
@@ -207,6 +207,115 @@ html, body {
   const homeBtn = document.getElementById('homeBtn');
   const openNew = document.getElementById('openNewLink');
   const entries = document.querySelectorAll('.entry');
+  let pendingTargets = null;   // selector list to highlight after iframe load
+  let highlightTimers = [];
+
+  // CSS injected into the iframe document
+  const HIGHLIGHT_CSS = `
+    @keyframes report-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(0, 222, 90, 0.55), 0 0 0 0 rgba(0, 222, 90, 0.35); }
+      60%  { box-shadow: 0 0 0 14px rgba(0, 222, 90, 0), 0 0 0 28px rgba(0, 222, 90, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 222, 90, 0), 0 0 0 0 rgba(0, 222, 90, 0); }
+    }
+    .report-spotlight {
+      position: relative;
+      animation: report-pulse 1.6s ease-out 0s 3;
+      border-radius: 14px;
+      transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .report-spotlight::after {
+      content: ''; position: absolute; inset: -6px;
+      border: 2px solid #00DE5A; border-radius: 16px;
+      pointer-events: none;
+      animation: report-pulse 1.6s ease-out 0s 3;
+    }
+    .report-arrow-pin {
+      position: fixed;
+      z-index: 9999;
+      background: #00A847; color: #fff;
+      font-family: 'Pretendard', sans-serif; font-weight: 800; font-size: 12px;
+      padding: 6px 10px; border-radius: 999px;
+      box-shadow: 0 6px 16px rgba(0, 168, 71, 0.4);
+      pointer-events: none;
+      transform: translate(-50%, -100%);
+      animation: report-bounce 1.2s ease-in-out infinite;
+      letter-spacing: -0.2px;
+    }
+    .report-arrow-pin::after {
+      content: ''; position: absolute; left: 50%; bottom: -5px;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid #00A847;
+    }
+    @keyframes report-bounce {
+      0%, 100% { transform: translate(-50%, -100%); }
+      50%      { transform: translate(-50%, calc(-100% - 6px)); }
+    }
+  `;
+
+  function clearHighlights(doc) {
+    if (!doc) return;
+    doc.querySelectorAll('.report-spotlight').forEach(el => el.classList.remove('report-spotlight'));
+    doc.querySelectorAll('.report-arrow-pin').forEach(el => el.remove());
+    highlightTimers.forEach(t => clearTimeout(t));
+    highlightTimers = [];
+  }
+
+  function injectStyle(doc) {
+    if (doc.getElementById('report-highlight-style')) return;
+    const style = doc.createElement('style');
+    style.id = 'report-highlight-style';
+    style.textContent = HIGHLIGHT_CSS;
+    doc.head.appendChild(style);
+  }
+
+  function highlightTargets(targetsCsv) {
+    const doc = frame.contentDocument;
+    if (!doc || !targetsCsv) return;
+    injectStyle(doc);
+    clearHighlights(doc);
+
+    const selectors = targetsCsv.split(',').map(s => s.trim()).filter(Boolean);
+    const elements = [];
+    selectors.forEach(sel => {
+      const el = doc.querySelector(sel);
+      if (el) elements.push(el);
+    });
+    if (!elements.length) return;
+
+    // 첫 타깃으로 스크롤
+    elements[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // 순차 강조 (각 600ms 간격)
+    elements.forEach((el, i) => {
+      const t1 = setTimeout(() => {
+        el.classList.add('report-spotlight');
+        // 라벨 핀 (여러 개일 때 번호)
+        if (elements.length > 1) {
+          const pin = doc.createElement('div');
+          pin.className = 'report-arrow-pin';
+          pin.textContent = `진입점 ${i + 1}`;
+          doc.body.appendChild(pin);
+          const positionPin = () => {
+            const rect = el.getBoundingClientRect();
+            pin.style.left = (rect.left + rect.width / 2) + 'px';
+            pin.style.top = (rect.top - 4) + 'px';
+          };
+          positionPin();
+          const onScroll = () => positionPin();
+          frame.contentWindow.addEventListener('scroll', onScroll, { passive: true });
+          // 5초 후 핀 제거
+          highlightTimers.push(setTimeout(() => {
+            pin.remove();
+            frame.contentWindow.removeEventListener('scroll', onScroll);
+          }, 5500));
+        }
+      }, i * 700);
+      highlightTimers.push(t1);
+    });
+  }
 
   function setActive(href) {
     entries.forEach(e => {
@@ -217,22 +326,37 @@ html, body {
   entries.forEach(btn => {
     btn.addEventListener('click', () => {
       const href = btn.dataset.href;
-      frame.src = href;
+      pendingTargets = btn.dataset.targets || null;
+      const sameUrl = frame.contentWindow && frame.contentWindow.location.href.endsWith(href);
+      if (sameUrl) {
+        // 이미 같은 페이지면 즉시 다시 강조
+        highlightTargets(pendingTargets);
+        pendingTargets = null;
+      } else {
+        frame.src = href;
+      }
       openNew.href = href;
       setActive(href);
     });
   });
 
   homeBtn.addEventListener('click', () => {
+    pendingTargets = null;
     frame.src = 'index.html';
     openNew.href = 'index.html';
     setActive(null);
   });
 
-  // iframe 내부에서 페이지가 바뀌면 우측 활성 카드도 갱신
+  // iframe 로드 완료 시 강조
   frame.addEventListener('load', () => {
     try {
       const path = frame.contentWindow.location.pathname.split('/').pop();
+      if (pendingTargets) {
+        // 컨텐츠 렌더링 안정화 대기
+        setTimeout(() => highlightTargets(pendingTargets), 250);
+        pendingTargets = null;
+      }
+      // 활성 카드 동기화
       const search = frame.contentWindow.location.search || '';
       const full = path + search;
       const match = Array.from(entries).find(e => e.dataset.href === full || e.dataset.href.startsWith(path));
