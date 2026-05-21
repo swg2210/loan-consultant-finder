@@ -165,6 +165,10 @@ html, body {
       <span class="entry__num">3</span>
       <span class="entry__title">주담대 비교 결과</span>
     </button>
+    <button class="entry" data-href="index-pc.html" data-targets=".ccard" data-width="1280">
+      <span class="entry__num">4</span>
+      <span class="entry__title">대출모집인 메인 (PC)</span>
+    </button>
   </div>
 
   <button class="home-btn" id="homeBtn">메인으로</button>
@@ -410,6 +414,9 @@ html, body {
     btn.addEventListener('click', () => {
       const href = btn.dataset.href;
       pendingTargets = btn.dataset.targets || null;
+      // 시나리오별 스테이지 너비 (PC 등)
+      const w = parseInt(btn.dataset.width, 10) || 390;
+      applyStageWidth(w);
       let sameUrl = false;
       try {
         sameUrl = frame.contentWindow && frame.contentWindow.location.href.endsWith(href);
@@ -429,10 +436,22 @@ html, body {
   homeBtn.addEventListener('click', () => {
     pendingTargets = null;
     clearOverlay();
+    applyStageWidth(390);
     frame.src = 'index.html';
     openNew.href = 'index.html';
     setActive(null);
   });
+
+  // 스테이지/프레임 너비를 시나리오에 맞게 변경 (모바일 390, PC 1280 등)
+  function applyStageWidth(w) {
+    const stage = document.querySelector('.stage');
+    const fr    = document.querySelector('.frame');
+    if (!stage || !fr) return;
+    const winW = window.innerWidth - 360; // 좌측 패널 영역 제외
+    const actual = Math.min(w, Math.max(390, winW));
+    stage.style.width = actual + 'px';
+    fr.style.width = actual + 'px';
+  }
 
   frame.addEventListener('load', () => {
     // iframe 내부에서 페이지가 바뀌면 항상 기존 강조는 제거

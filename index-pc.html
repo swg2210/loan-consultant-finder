@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1280" />
+  <title>대출모집인 찾기 (PC) — 네이버페이</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  <style>
+    :root {
+      --primary: #00DE5A;
+      --primary-700: #00A847;
+      --info-bg: #E6FAEE;
+      --gray-50:  #FAFAFA;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-900: #1F2937;
+      --star: #F59E0B;
+      --radius-card: 14px;
+      --radius-chip: 10px;
+      --radius-btn: 12px;
+      --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow-card: 0 1px 2px rgba(17,24,39,0.04), 0 4px 16px rgba(17,24,39,0.06);
+      --shadow-modal: 0 20px 50px rgba(17,24,39,0.18);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      color: var(--gray-900);
+      background: #F5F6F8;
+      font-size: 15px; line-height: 1.5; font-weight: 500;
+    }
+    a { color: inherit; }
+
+    /* ─── Top bar (full width) ────────────────────── */
+    .gnb {
+      background: #fff; border-bottom: 1px solid var(--gray-200);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .gnb__inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; gap: 24px;
+      padding: 14px 24px;
+    }
+    .gnb__brand { display: flex; align-items: center; gap: 10px; }
+    .gnb__brand-np {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      font-size: 19px; font-weight: 900; letter-spacing: -0.6px;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .gnb__brand-title { font-size: 17px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.3px; }
+    .gnb__brand-sub  { font-size: 12px; color: var(--gray-500); font-weight: 600; margin-left: 4px; }
+    .gnb__nav { display: flex; gap: 4px; margin-left: 24px; }
+    .gnb__nav a {
+      padding: 8px 12px; border-radius: 8px;
+      font-size: 14px; font-weight: 600; color: var(--gray-700);
+      text-decoration: none;
+    }
+    .gnb__nav a.is-active { color: var(--primary-700); background: var(--info-bg); }
+    .gnb__spacer { flex: 1; }
+    .gnb__actions { display: flex; gap: 6px; }
+    .iconbtn {
+      width: 36px; height: 36px; border-radius: 50%; border: 0;
+      background: var(--gray-100); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .iconbtn:hover { background: var(--gray-200); }
+
+    /* ─── Hero ─────────────────────────────────────── */
+    .hero {
+      background:
+        radial-gradient(1200px 380px at 50% 0%, #E7FBEF 0%, #F5F6F8 70%);
+      padding: 56px 24px 32px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .hero__inner { max-width: 760px; margin: 0 auto; text-align: center; }
+    .hero__kicker {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 12px; border-radius: 999px;
+      background: #fff; border: 1px solid var(--gray-200);
+      color: var(--gray-700); font-size: 12px; font-weight: 700;
+      margin-bottom: 18px; box-shadow: var(--shadow-card);
+    }
+    .hero__kicker .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--primary); }
+    .hero__title {
+      font-size: 38px; font-weight: 900; line-height: 1.2;
+      letter-spacing: -0.8px; color: var(--gray-900);
+      margin: 0 0 12px;
+    }
+    .hero__title em { color: var(--primary-700); font-style: normal; }
+    .hero__sub {
+      font-size: 15px; color: var(--gray-600); font-weight: 500;
+      margin: 0 0 28px;
+    }
+    .search-wrap { position: relative; max-width: 580px; margin: 0 auto; }
+    .search-box {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 18px; background: #fff;
+      border-radius: 14px; border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-card);
+      color: var(--gray-400);
+    }
+    .search-box:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0,222,90,0.15); }
+    .search-box__input {
+      flex: 1; border: 0; outline: 0; background: transparent;
+      font-size: 15px; font-weight: 500;
+      color: var(--gray-900); font-family: inherit;
+    }
+    .search-box__input::placeholder { color: var(--gray-400); }
+    .search-results {
+      display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0;
+      background: #fff; border: 1px solid var(--gray-200);
+      border-radius: 14px; box-shadow: var(--shadow-modal);
+      max-height: 360px; overflow-y: auto; z-index: 20;
+    }
+    .search-results.open { display: block; }
+    .search-result {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 16px; cursor: pointer; text-decoration: none; color: inherit;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .search-result:last-child { border-bottom: 0; }
+    .search-result:hover, .search-result.active { background: var(--gray-50); }
+    .search-result__thumb { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; background: var(--gray-100); flex-shrink: 0; }
+    .search-result__body { flex: 1; min-width: 0; text-align: left; }
+    .search-result__name { font-size: 14px; font-weight: 700; }
+    .search-result__addr { font-size: 12px; color: var(--gray-500); font-weight: 500; }
+    .search-result__price { font-size: 13px; color: var(--primary-700); font-weight: 700; }
+    .search-empty { padding: 22px; text-align: center; color: var(--gray-500); font-size: 13px; }
+
+    .quick-row { display: flex; gap: 8px; justify-content: center; margin-top: 16px; flex-wrap: wrap; }
+    .quick-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 14px; border-radius: var(--radius-chip);
+      background: #fff; border: 1px solid var(--gray-200);
+      color: var(--gray-700); font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit;
+    }
+    .quick-chip:hover { background: var(--gray-50); }
+    .quick-chip svg { color: var(--primary); }
+
+    /* ─── Page grid (main + aside) ──────────────── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
+    .grid {
+      display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 32px;
+      align-items: start;
+    }
+    .section-title-row {
+      display: flex; align-items: baseline; justify-content: space-between;
+      margin: 8px 0 16px;
+    }
+    .section-title {
+      font-size: 20px; font-weight: 800; letter-spacing: -0.4px;
+      color: var(--gray-900); margin: 0;
+    }
+    .section-title em { color: var(--primary-700); font-style: normal; }
+    .section-sub { font-size: 13px; color: var(--gray-500); font-weight: 500; }
+    .link-more { font-size: 13px; color: var(--gray-500); font-weight: 600; text-decoration: none; }
+    .link-more:hover { color: var(--gray-700); }
+
+    /* ─── Property grid ──────────────────────────── */
+    .prop-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+      margin-bottom: 36px;
+    }
+    .prop-card {
+      background: #fff; border: 1px solid var(--gray-200);
+      border-radius: var(--radius-card); overflow: hidden;
+      text-decoration: none; color: inherit;
+      transition: transform 150ms var(--ease-standard), box-shadow 150ms var(--ease-standard);
+    }
+    .prop-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+    .prop-card__thumb {
+      width: 100%; aspect-ratio: 4 / 2.4;
+      background: repeating-linear-gradient(135deg, #F3F4F6 0 12px, #E5E7EB 12px 24px);
+      object-fit: cover; display: block;
+    }
+    .prop-card__body { padding: 14px 16px 16px; }
+    .prop-card__name { font-size: 15px; font-weight: 800; letter-spacing: -0.2px; margin-bottom: 2px; }
+    .prop-card__meta { font-size: 12px; color: var(--gray-500); font-weight: 600; margin-bottom: 6px; }
+    .prop-card__price { font-size: 15px; font-weight: 800; letter-spacing: -0.2px; font-feature-settings: "tnum"; }
+
+    /* ─── Consultant grid ────────────────────────── */
+    .filterbar { display: flex; gap: 8px; margin-bottom: 16px; align-items: center; }
+    .filterbar .count-pill {
+      margin-left: auto; font-size: 12px; color: var(--gray-500);
+      font-weight: 600;
+    }
+    .chip {
+      padding: 8px 14px; border-radius: var(--radius-chip);
+      font-size: 13px; font-weight: 600;
+      background: #fff; border: 1px solid var(--gray-300);
+      color: var(--gray-600); cursor: pointer; font-family: inherit;
+      transition: all 150ms var(--ease-standard);
+    }
+    .chip:hover { background: var(--gray-50); }
+    .chip[aria-pressed="true"] {
+      background: var(--primary); color: #1E1E23; border-color: var(--primary);
+    }
+
+    .clist-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;
+    }
+    .ccard {
+      display: flex; flex-direction: column;
+      background: #fff; border: 1px solid var(--gray-200);
+      border-radius: var(--radius-card); padding: 18px;
+      cursor: pointer;
+      transition: transform 150ms var(--ease-standard), box-shadow 150ms var(--ease-standard), border-color 150ms;
+    }
+    .ccard:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); border-color: var(--gray-300); }
+    .ccard__head { display: flex; gap: 14px; align-items: center; margin-bottom: 14px; }
+    .avatar { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
+    .avatar__base {
+      width: 100%; height: 100%; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; color: var(--gray-900);
+      letter-spacing: -0.3px; overflow: hidden;
+    }
+    .avatar__base img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .avatar__bank {
+      position: absolute; right: -2px; bottom: -2px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #fff; padding: 2px; box-sizing: border-box;
+    }
+    .bank-circle {
+      width: 100%; height: 100%; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; font-weight: 800; letter-spacing: -0.2px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
+    }
+    .bank-logo { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 1px rgba(0,0,0,0.06); display: block; }
+    .ccard__info { flex: 1; min-width: 0; }
+    .ccard__name { font-size: 17px; font-weight: 800; letter-spacing: -0.3px; margin-bottom: 3px; }
+    .ccard__org { font-size: 12.5px; color: var(--gray-500); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ccard__meta { display: flex; align-items: center; gap: 8px; font-size: 12.5px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--gray-100); }
+    .star { display: inline-flex; align-items: center; gap: 3px; font-weight: 700; color: var(--gray-900); }
+    .star svg { color: var(--star); }
+    .star .count { color: var(--gray-400); font-weight: 500; }
+    .meta-divider { color: var(--gray-300); }
+    .respond { color: var(--gray-700); font-weight: 600; }
+    .ccard__specs { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+    .spec { font-size: 11px; font-weight: 600; padding: 4px 9px; border-radius: 8px; background: var(--gray-100); color: var(--gray-600); }
+
+    .view-all {
+      display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+      margin: 20px auto 0; padding: 14px 24px;
+      background: #fff; border: 1px solid var(--gray-300);
+      border-radius: var(--radius-btn);
+      font-size: 14px; font-weight: 700; color: var(--gray-700);
+      text-decoration: none; cursor: pointer; font-family: inherit;
+    }
+    .view-all:hover { background: var(--gray-50); }
+
+    /* ─── Aside ────────────────────────────────────── */
+    aside.side { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 80px; }
+    .side-card {
+      background: #fff; border: 1px solid var(--gray-200);
+      border-radius: var(--radius-card); padding: 20px;
+    }
+    .side-card h3 {
+      font-size: 15px; font-weight: 800; letter-spacing: -0.2px;
+      margin: 0 0 10px; display: flex; align-items: center; gap: 8px;
+    }
+    .side-card h3::before {
+      content: ''; display: inline-block; width: 4px; height: 14px;
+      background: var(--primary); border-radius: 2px;
+    }
+    .side-card .desc { font-size: 13px; line-height: 1.6; color: var(--gray-700); margin: 0 0 12px; }
+    .side-card .pills { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .side-pill { font-size: 11.5px; font-weight: 600; color: var(--gray-700); background: var(--gray-100); padding: 5px 10px; border-radius: 999px; }
+    .side-card .source { font-size: 11.5px; color: var(--gray-500); font-weight: 500; }
+    .side-card .source a { color: var(--gray-600); text-decoration: none; font-weight: 600; }
+    .side-card .source a + a::before { content: ' · '; color: var(--gray-300); }
+
+    .official__row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px; border-radius: 10px;
+      text-decoration: none; color: inherit;
+      transition: background 150ms;
+    }
+    .official__row:hover { background: var(--gray-50); }
+    .official__row + .official__row { border-top: 1px solid var(--gray-100); }
+    .official__row__icon { font-size: 18px; flex-shrink: 0; }
+    .official__row__body { flex: 1; min-width: 0; }
+    .official__row__title { font-size: 13px; font-weight: 700; }
+    .official__row__sub { font-size: 11.5px; color: var(--gray-500); font-weight: 500; }
+    .official__row__chev { color: var(--gray-300); }
+
+    .tips { padding: 0; margin: 0; list-style: none; }
+    .tips li {
+      font-size: 13px; font-weight: 500; color: var(--gray-700);
+      padding-left: 18px; position: relative; margin-bottom: 10px; line-height: 1.55;
+    }
+    .tips li:last-child { margin-bottom: 0; }
+    .tips li::before {
+      content: ''; position: absolute; left: 4px; top: 8px;
+      width: 4px; height: 4px; border-radius: 50%; background: var(--primary);
+    }
+
+    /* ─── Detail modal (centered) ───────────────── */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(17,24,39,0.5);
+      z-index: 100; opacity: 0; pointer-events: none;
+      transition: opacity 180ms var(--ease-standard);
+    }
+    .modal-backdrop.open { opacity: 1; pointer-events: auto; }
+    .modal {
+      position: fixed; top: 50%; left: 50%;
+      transform: translate(-50%, -48%); opacity: 0; pointer-events: none;
+      width: min(560px, calc(100vw - 32px));
+      max-height: calc(100vh - 64px);
+      background: #fff; border-radius: 16px; z-index: 101;
+      box-shadow: var(--shadow-modal); overflow: hidden;
+      display: flex; flex-direction: column;
+      transition: opacity 180ms var(--ease-standard), transform 180ms var(--ease-standard);
+    }
+    .modal.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%); }
+    .modal__close {
+      position: absolute; right: 12px; top: 12px;
+      width: 34px; height: 34px; border-radius: 50%; border: 0;
+      background: var(--gray-100); cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center;
+      z-index: 2;
+    }
+    .modal__close:hover { background: var(--gray-200); }
+    .modal__scroll { overflow-y: auto; flex: 1; padding: 0 0 8px; }
+    .sheet__header { display: flex; gap: 16px; align-items: center; padding: 24px 24px 18px; }
+    .sheet__name { font-size: 22px; font-weight: 800; letter-spacing: -0.4px; }
+    .sheet__org { font-size: 13px; color: var(--gray-500); margin-top: 3px; }
+    .sheet__regno { font-size: 11.5px; color: var(--gray-400); margin-top: 4px; font-feature-settings: "tnum"; }
+    .sheet__metrics {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+      margin: 0 24px 18px; background: var(--gray-50);
+      border-radius: 12px; padding: 16px 0;
+    }
+    .metric { text-align: center; }
+    .metric__value { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; font-feature-settings: "tnum"; }
+    .metric__label { font-size: 11.5px; color: var(--gray-500); font-weight: 600; margin-top: 3px; }
+    .sheet__section { padding: 16px 24px 4px; }
+    .sheet__section-label { font-size: 11px; font-weight: 700; color: var(--gray-500); letter-spacing: 0.3px; text-transform: uppercase; margin-bottom: 10px; }
+    .specs { display: flex; gap: 4px; flex-wrap: wrap; }
+    .bio { font-size: 14px; color: var(--gray-700); line-height: 1.6; margin: 0; }
+    .review { padding: 12px 0; border-top: 1px solid var(--gray-100); }
+    .review:first-child { border-top: none; }
+    .review__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .review__date { font-size: 11px; color: var(--gray-400); font-weight: 500; }
+    .review__body { font-size: 13.5px; color: var(--gray-700); line-height: 1.6; }
+    .review__tag { font-size: 11px; color: var(--primary-700); font-weight: 600; margin-top: 4px; }
+    .modal__cta {
+      display: flex; gap: 8px; padding: 16px 24px;
+      background: #fff; border-top: 1px solid var(--gray-100);
+    }
+    .btn {
+      flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      padding: 14px 16px; border-radius: var(--radius-btn);
+      font-size: 14px; font-weight: 700; border: 0; cursor: pointer; font-family: inherit;
+      transition: transform 150ms var(--ease-standard);
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn--primary { background: var(--primary); color: #1E1E23; }
+    .btn--secondary { background: var(--gray-100); color: var(--gray-900); }
+    .btn--secondary:hover { background: var(--gray-200); }
+    .btn--primary:hover { background: var(--primary-700); color: #fff; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- GNB -->
+  <header class="gnb">
+    <div class="gnb__inner">
+      <div class="gnb__brand">
+        <span class="gnb__brand-np">N</span>
+        <span class="gnb__brand-title">네이버페이</span>
+        <span class="gnb__brand-sub">· 대출모집인 찾기</span>
+      </div>
+      <nav class="gnb__nav">
+        <a href="#" class="is-active">대출모집인 찾기</a>
+        <a href="https://new-m.pay.naver.com/creditfinance" target="_blank">신용점수</a>
+        <a href="https://new-m.pay.naver.com/loanproducts" target="_blank">대출비교</a>
+      </nav>
+      <div class="gnb__spacer"></div>
+      <div class="gnb__actions">
+        <button class="iconbtn" aria-label="알림">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke="#1F2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="iconbtn" aria-label="공유">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7M16 6l-4-4-4 4M12 2v14" stroke="#1F2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero__inner">
+      <span class="hero__kicker"><span class="dot"></span>금융감독원 등록 모집인만 노출해요</span>
+      <h1 class="hero__title"><em>부동산 대출</em>, 도와줄 상담사를 찾아드려요</h1>
+      <p class="hero__sub">매물 주소 한 줄로 근처 등록 모집인을 비교해 보세요.</p>
+      <div class="search-wrap">
+        <div class="search-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input type="text" class="search-box__input" id="searchInput" placeholder="단지명 또는 도로명 주소" autocomplete="off">
+        </div>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+      <div class="quick-row">
+        <button class="quick-chip" onclick="alert('내 위치 권한 — 프로토타입')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          내 위치로 찾기
+        </button>
+        <button class="quick-chip" onclick="location.href='property-detail.html'">최근 본 매물</button>
+        <button class="quick-chip" onclick="location.href='consultants.html'">전체 상담사 보기</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main -->
+  <main class="container">
+    <div class="grid">
+      <!-- LEFT: 매물 + 상담사 -->
+      <div>
+        <!-- 최근 조회한 매물 -->
+        <div class="section-title-row">
+          <h2 class="section-title">최근 조회한 매물</h2>
+          <a class="link-more" href="#">전체 ›</a>
+        </div>
+        <div class="prop-grid">
+          <a class="prop-card" href="property-detail.html?id=jaie">
+            <img class="prop-card__thumb" src="assets/photos/01.jpg" alt="청담자이" onerror="this.style.display='none'">
+            <div class="prop-card__body">
+              <div class="prop-card__name">청담자이</div>
+              <div class="prop-card__meta">강남구 청담동 · 120B㎡</div>
+              <div class="prop-card__price">매매 53억</div>
+            </div>
+          </a>
+          <a class="prop-card" href="property-detail.html?id=lwell">
+            <img class="prop-card__thumb" src="assets/photos/lwell-01.jpg" alt="청담르엘" onerror="this.style.display='none'">
+            <div class="prop-card__body">
+              <div class="prop-card__name">청담르엘</div>
+              <div class="prop-card__meta">강남구 청담동 · 115B㎡</div>
+              <div class="prop-card__price">매매 68억</div>
+            </div>
+          </a>
+          <a class="prop-card" href="property-detail.html?id=ipark">
+            <img class="prop-card__thumb" src="assets/photos/ipark-01.jpg" alt="청담 아이파크" onerror="this.style.display='none'">
+            <div class="prop-card__body">
+              <div class="prop-card__name">청담 아이파크</div>
+              <div class="prop-card__meta">강남구 청담동 · 137㎡</div>
+              <div class="prop-card__price">매매 32억</div>
+            </div>
+          </a>
+        </div>
+
+        <!-- 상담사 -->
+        <div class="section-title-row">
+          <h2 class="section-title">평점 높은 상담사</h2>
+          <span class="section-sub">금융감독원 등록 모집인 <em id="totalCount">0</em>명</span>
+        </div>
+        <div class="filterbar" role="tablist">
+          <button class="chip" data-sort="rating" aria-pressed="true">만족도 높은순</button>
+          <button class="chip" data-sort="respond" aria-pressed="false">응답 빠른순</button>
+          <button class="chip" data-sort="career" aria-pressed="false">경력 많은순</button>
+          <span class="count-pill"><b id="count">0</b>명 표시 중</span>
+        </div>
+        <section class="clist-grid" id="clist"></section>
+        <div style="text-align:center;"><a class="view-all" href="consultants.html">전체 상담사 보기 ›</a></div>
+      </div>
+
+      <!-- RIGHT: Aside -->
+      <aside class="side">
+        <div class="side-card">
+          <h3>대출모집인이란?</h3>
+          <p class="desc">금융회사와 계약을 맺고 대출 상담·서류 접수를 대행하는 <b>금융업협회 등록 전문가</b>예요. 1사 1전속이라 소속 은행 상품에 정통합니다.</p>
+          <div class="pills">
+            <span class="side-pill">⏰ 시간 절약</span>
+            <span class="side-pill">📋 서류 대행</span>
+            <span class="side-pill">💡 맞춤 상담</span>
+            <span class="side-pill">🛡️ 공인 등록</span>
+          </div>
+          <div class="source">
+            출처
+            <a href="https://www.loanconsultant.or.kr/loan_viewPolicy.do" target="_blank" rel="noopener">은행연합회</a>
+            <a href="https://terms.naver.com/entry.naver?docId=2067483" target="_blank" rel="noopener">네이버 지식백과</a>
+          </div>
+        </div>
+
+        <div class="side-card">
+          <h3>공식 조회</h3>
+          <a class="official__row" href="https://www.loanconsultant.or.kr/loan_main.do" target="_blank" rel="noopener">
+            <span class="official__row__icon">🏦</span>
+            <span class="official__row__body">
+              <span class="official__row__title">대출모집인 통합조회</span><br>
+              <span class="official__row__sub">은행연합회 · 등록 여부 확인</span>
+            </span>
+            <svg class="official__row__chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </a>
+          <a class="official__row" href="https://www.fss.or.kr/" target="_blank" rel="noopener">
+            <span class="official__row__icon">🛡️</span>
+            <span class="official__row__body">
+              <span class="official__row__title">불법 대출중개 신고</span><br>
+              <span class="official__row__sub">금융감독원 · 소비자 보호</span>
+            </span>
+            <svg class="official__row__chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </a>
+        </div>
+
+        <div class="side-card">
+          <h3>이용 Tip</h3>
+          <ul class="tips">
+            <li>등록 여부와 등록번호를 먼저 확인하세요.</li>
+            <li>중개수수료는 모집인이 받지 않습니다. 요구 시 신고하세요.</li>
+            <li>최소 2~3명 비교 상담 후 결정하는 것을 권장해요.</li>
+            <li>대출금은 반드시 본인 계좌로 직접 수령하세요.</li>
+            <li>금리인하요구권은 실행 후에도 행사할 수 있어요.</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Detail modal -->
+  <div class="modal-backdrop" id="backdrop"></div>
+  <aside class="modal" id="sheet" aria-hidden="true">
+    <button class="modal__close" id="modalClose" aria-label="닫기">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="#1F2937" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="modal__scroll" id="sheetBody"></div>
+  </aside>
+
+  <script src="assets/properties.js"></script>
+  <script src="assets/consultants.js"></script>
+  <script>
+    // ─── Search box ───────────────────────────────
+    (function () {
+      const input = document.getElementById('searchInput');
+      const box = document.getElementById('searchResults');
+      if (!input || !box || !window.PROPERTIES) return;
+      const items = Object.entries(window.PROPERTIES).map(([id, p]) => ({
+        id, name: p.nameShort, fullName: p.name, addr: p.address,
+        price: p.price, thumb: `assets/photos/${p.photos[0]}`,
+      }));
+      let activeIdx = -1;
+      function render(q) {
+        const norm = (q || '').trim().toLowerCase();
+        const list = norm
+          ? items.filter(i => i.name.toLowerCase().includes(norm) || i.fullName.toLowerCase().includes(norm) || i.addr.toLowerCase().includes(norm))
+          : items;
+        if (!list.length) {
+          box.innerHTML = '<div class="search-empty">프로토 타입 더미 데이터가 없습니다 :)</div>';
+        } else {
+          box.innerHTML = list.map((i, idx) => `
+            <a class="search-result${idx === activeIdx ? ' active' : ''}" href="property-detail.html?id=${i.id}">
+              <img class="search-result__thumb" src="${encodeURI(i.thumb)}" alt="">
+              <div class="search-result__body">
+                <div class="search-result__name">${i.name}</div>
+                <div class="search-result__addr">${i.addr}</div>
+              </div>
+              <div class="search-result__price">${i.price}</div>
+            </a>`).join('');
+        }
+        box.classList.add('open');
+      }
+      input.addEventListener('focus', () => render(input.value));
+      input.addEventListener('input', () => { activeIdx = -1; render(input.value); });
+      input.addEventListener('keydown', (e) => {
+        const results = box.querySelectorAll('.search-result');
+        if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx + 1, results.length - 1); render(input.value); }
+        else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx - 1, 0); render(input.value); }
+        else if (e.key === 'Enter' && results[activeIdx]) { e.preventDefault(); location.href = results[activeIdx].href; }
+        else if (e.key === 'Escape') { box.classList.remove('open'); input.blur(); }
+      });
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-wrap')) box.classList.remove('open');
+      });
+    })();
+
+    const BANKS = {
+      shinhan: { name: '신한',    short: '신한', color: '#0046FF' },
+      kb:      { name: 'KB국민',  short: 'KB',   color: '#FFBC00' },
+      woori:   { name: '우리',    short: '우리', color: '#0067AC' },
+      hana:    { name: '하나',    short: '하나', color: '#008C95' },
+      nh:      { name: 'NH농협',  short: 'NH',   color: '#00A651' },
+      kakao:   { name: '카카오뱅크', short: '카뱅', color: '#FFE812' },
+    };
+    const SPECS = {
+      apt: '주택담보', jeonse: '아파트전세', swap: '갈아타기',
+      biz: '사업자대출', credit: '신용대출', youth: '청년·신혼',
+    };
+    const BANK_LOGOS = {
+      shinhan: 'assets/banks/shinhan.png',
+      kb:      'assets/banks/kb.png',
+      hana:    'assets/banks/hana.png',
+      woori:   'assets/banks/woori.png',
+      nh:      'assets/banks/nh.png',
+      kakao:   'assets/banks/kakao.png',
+    };
+    const CONSULTANTS = window.CONSULTANTS_DATA || [];
+    const REVIEWS = {
+      'kim-seoyoon': [
+        { rating:5, date:'2026.05.04', body:'계약 3일 전에 갑자기 갈아타기 결심했는데 일정 다 맞춰주셨어요. 무리한 권유 없어서 좋았습니다.', tag:'갈아타기' },
+        { rating:5, date:'2026.04.18', body:'여러 은행 비교 견적도 같이 봐주시고 결국 신한 조건이 제일 나았어요. 0.18%p 더 낮춤.', tag:'주담대 신규' },
+      ],
+      'choi-yeonsu': [
+        { rating:5, date:'2026.05.13', body:'첫 통화 5분 만에 한도랑 금리 알려주신다고 했는데 진짜 그렇게 됐어요. 베테랑 느낌.', tag:'갈아타기' },
+        { rating:5, date:'2026.05.02', body:'중도상환수수료 계산해서 갈아타기 손익까지 같이 봐줘요. 다른 분들과 깊이가 다름.', tag:'갈아타기' },
+      ],
+      'park-junhyuk': [
+        { rating:5, date:'2026.05.11', body:'사업자대출 + 주담대 동시에 봐주실 분 찾기 어려운데 도움 많이 됐어요.', tag:'사업자 · 주담대' },
+      ],
+    };
+    const STAR_SVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+
+    function bankCircleHTML(code) {
+      const b = BANKS[code]; if (!b) return '';
+      const logo = BANK_LOGOS[code];
+      if (logo) {
+        return `<img class="bank-logo" src="${logo}" alt="${b.name}"
+          onerror="this.outerHTML='<span class=&quot;bank-circle&quot; style=&quot;background:${b.color};color:${['kb','kakao'].includes(code)?'#1F2937':'#fff'}&quot;>${b.short.slice(0,2)}</span>'">`;
+      }
+      const light = ['kb', 'kakao'].includes(code);
+      return `<span class="bank-circle" style="background:${b.color}; color:${light ? '#1F2937' : '#fff'};">${b.short.slice(0, 2)}</span>`;
+    }
+    function avatarHTML(c) {
+      const photo = `assets/consultants/${c.id}.png`;
+      const inner = `<img src="${photo}" alt="${c.name}" onerror="this.replaceWith(document.createTextNode('${c.surname}'))">`;
+      return `<div class="avatar">
+        <div class="avatar__base" style="background:${c.avatarTone || '#F3F4F6'}">${inner}</div>
+        <div class="avatar__bank">${bankCircleHTML(c.bank)}</div>
+      </div>`;
+    }
+
+    // ─── List ─────────────────────────────────────
+    const $list  = document.getElementById('clist');
+    const $count = document.getElementById('count');
+    const $totalCount = document.getElementById('totalCount');
+    if ($totalCount) $totalCount.textContent = CONSULTANTS.length;
+
+    function renderCards(sortKey) {
+      const sorted = [...CONSULTANTS].sort((a, b) => {
+        if (sortKey === 'respond') return a.respondMins - b.respondMins;
+        if (sortKey === 'career') return b.career - a.career;
+        return b.rating - a.rating;
+      }).slice(0, 8);
+      $count.textContent = sorted.length;
+      $list.innerHTML = sorted.map(c => `
+        <div class="ccard" data-id="${c.id}">
+          <div class="ccard__head">
+            ${avatarHTML(c)}
+            <div class="ccard__info">
+              <div class="ccard__name">${c.name}</div>
+              <div class="ccard__org">${c.org} · 경력 ${c.career}년</div>
+            </div>
+          </div>
+          <div class="ccard__specs">
+            ${c.specs.slice(0,3).map(s => `<span class="spec">${SPECS[s]}</span>`).join('')}
+          </div>
+          <div class="ccard__meta">
+            <span class="star">${STAR_SVG}<span>${c.rating.toFixed(1)}</span><span class="count">(${c.reviewCount})</span></span>
+            <span class="meta-divider">·</span>
+            <span class="respond">평균 응답 ${c.respondMins}분</span>
+          </div>
+        </div>`).join('');
+    }
+    renderCards('rating');
+
+    document.querySelectorAll('.chip[data-sort]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.chip[data-sort]').forEach(b => b.setAttribute('aria-pressed', 'false'));
+        btn.setAttribute('aria-pressed', 'true');
+        renderCards(btn.dataset.sort);
+      });
+    });
+
+    // ─── Modal ────────────────────────────────────
+    const $sheet = document.getElementById('sheet');
+    const $backdrop = document.getElementById('backdrop');
+    const $sheetBody = document.getElementById('sheetBody');
+    const $close = document.getElementById('modalClose');
+
+    function openSheet(id) {
+      const c = CONSULTANTS.find(x => x.id === id); if (!c) return;
+      const reviews = REVIEWS[id] || [];
+      $sheetBody.innerHTML = `
+        <div class="sheet__header">
+          ${avatarHTML(c)}
+          <div>
+            <div class="sheet__name">${c.name}</div>
+            <div class="sheet__org">${c.org}</div>
+            <div class="sheet__regno">등록번호 ${c.regNo}</div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:12.5px; margin-top:8px;">
+              <span class="star">${STAR_SVG}<span>${c.rating.toFixed(1)}</span><span class="count">(${c.reviewCount})</span></span>
+              <span class="meta-divider">·</span>
+              <span class="respond">평균 응답 ${c.respondMins}분</span>
+            </div>
+          </div>
+        </div>
+        <div class="sheet__metrics">
+          <div class="metric"><div class="metric__value">${c.career}년</div><div class="metric__label">경력</div></div>
+          <div class="metric"><div class="metric__value">${c.consultCount.toLocaleString()}</div><div class="metric__label">누적 상담</div></div>
+          <div class="metric"><div class="metric__value">${brokerCountOf(c).toLocaleString()}</div><div class="metric__label">대출 중개 건수</div></div>
+        </div>
+        <div class="sheet__section">
+          <div class="sheet__section-label">전문 분야</div>
+          <div class="specs">${c.specs.map(s => `<span class="spec">${SPECS[s]}</span>`).join('')}</div>
+        </div>
+        <div class="sheet__section">
+          <div class="sheet__section-label">소개</div>
+          <p class="bio">${c.bio}</p>
+        </div>
+        ${reviews.length ? `
+        <div class="sheet__section">
+          <div class="sheet__section-label">후기 ${reviews.length}건</div>
+          ${reviews.map(r => `
+            <div class="review">
+              <div class="review__head"><span class="star">${STAR_SVG}<span>${r.rating.toFixed(1)}</span></span><span class="review__date">${r.date}</span></div>
+              <div class="review__body">${r.body}</div>
+              <div class="review__tag">#${r.tag}</div>
+            </div>`).join('')}
+        </div>` : ''}
+        <div style="height:16px"></div>`;
+      // CTA bar (fixed at bottom of modal)
+      let cta = $sheet.querySelector('.modal__cta');
+      if (!cta) {
+        cta = document.createElement('div');
+        cta.className = 'modal__cta';
+        cta.innerHTML = `
+          <button class="btn btn--secondary" onclick="alert('문자 — 프로토타입')">문자</button>
+          <button class="btn btn--primary" onclick="alert('전화 상담 — 프로토타입')">전화 상담</button>`;
+        $sheet.appendChild(cta);
+      }
+      $sheet.classList.add('open');
+      $backdrop.classList.add('open');
+      $sheet.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeSheet() {
+      $sheet.classList.remove('open');
+      $backdrop.classList.remove('open');
+      $sheet.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    $list.addEventListener('click', e => {
+      const card = e.target.closest('.ccard'); if (!card) return;
+      openSheet(card.dataset.id);
+    });
+    $backdrop.addEventListener('click', closeSheet);
+    $close.addEventListener('click', closeSheet);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+  </script>
+</body>
+</html>
