@@ -23,180 +23,175 @@ html, body {
   background: #EAEAEC; color: var(--gray-900); -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
+
+/* 좌측 슬림 사이드바 + 우측 프로토타입 */
 .report {
   display: grid;
-  grid-template-columns: minmax(390px, 420px) 1fr;
-  gap: 32px;
-  max-width: 1200px;
+  grid-template-columns: 240px 1fr;
+  gap: 24px;
+  max-width: 1100px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 24px;
   align-items: start;
+  min-height: 100vh;
 }
 
-/* Mobile frame */
-.frame {
+.panel {
   position: sticky; top: 24px;
-  width: 390px; height: calc(100vh - 64px); min-height: 760px; max-height: 900px;
-  background: #fff; border-radius: 24px; overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.panel__title {
+  font-size: 15px; font-weight: 800; color: var(--gray-900);
+  letter-spacing: -0.3px; line-height: 1.4; margin-bottom: 4px;
+}
+.panel__sub {
+  font-size: 12px; color: var(--gray-500); font-weight: 500;
+  line-height: 1.5; margin-bottom: 8px;
+}
+
+.entries { display: flex; flex-direction: column; gap: 8px; }
+.entry {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; background: #fff; border: 1px solid var(--gray-200);
+  border-radius: 10px; cursor: pointer; text-align: left;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit; width: 100%;
+}
+.entry:hover {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 222, 90, 0.1);
+}
+.entry.is-active {
+  border-color: var(--primary); background: #F0FDF4;
+  box-shadow: 0 0 0 2px rgba(0, 222, 90, 0.18);
+}
+.entry__num {
+  width: 24px; height: 24px; border-radius: 7px; flex-shrink: 0;
+  background: var(--gray-100); color: var(--gray-700);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 800;
+}
+.entry.is-active .entry__num,
+.entry:hover .entry__num { background: var(--primary); color: #fff; }
+.entry__title {
+  font-size: 12.5px; font-weight: 700; color: var(--gray-900);
+  letter-spacing: -0.2px; line-height: 1.35;
+}
+
+.home-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 4px;
+  padding: 8px 12px; background: #fff; border: 1px solid var(--gray-200);
+  border-radius: 8px; cursor: pointer; font-family: inherit;
+  font-size: 12px; font-weight: 700; color: var(--gray-700);
+  transition: all 150ms; margin-top: 8px;
+}
+.home-btn:hover { border-color: var(--gray-900); color: var(--gray-900); }
+.home-btn::before { content: '←'; }
+
+.open-new {
+  font-size: 11px; color: var(--gray-500);
+  text-decoration: none; font-weight: 600;
+  padding: 4px 0; text-align: center;
+}
+.open-new:hover { color: var(--gray-900); }
+
+/* 우측: 모바일 프레임 + 오버레이 컨테이너 */
+.stage {
+  position: relative;
+  width: 390px; margin: 0 auto;
+}
+.frame {
+  width: 390px; height: calc(100vh - 48px); min-height: 760px; max-height: 920px;
+  background: #fff; border-radius: 28px; overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.04);
+  position: relative;
 }
 .frame iframe {
   width: 100%; height: 100%; border: 0; display: block;
 }
 
-/* Right panel */
-.panel { padding-top: 8px; }
-.panel__eyebrow {
-  font-size: 13px; font-weight: 700; color: var(--primary-700);
-  letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 8px;
+/* 오버레이 — iframe 위에 절대 위치 링/핀 표시 */
+.overlay {
+  position: absolute; inset: 0;
+  pointer-events: none; overflow: hidden;
+  border-radius: 28px;
 }
-.panel__title {
-  font-size: 28px; font-weight: 800; letter-spacing: -0.5px;
-  color: var(--gray-900); line-height: 1.3; margin-bottom: 12px;
+.spot {
+  position: absolute;
+  border: 3px solid var(--primary);
+  border-radius: 14px;
+  box-shadow: 0 0 0 4px rgba(0, 222, 90, 0.25), 0 8px 24px rgba(0,0,0,0.15);
+  background: rgba(0, 222, 90, 0.06);
+  animation: spot-pulse 1.4s ease-in-out infinite;
+  transition: all 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.panel__sub {
-  font-size: 15px; color: var(--gray-700); line-height: 1.6; margin-bottom: 28px;
-  font-weight: 500;
+@keyframes spot-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(0, 222, 90, 0.25), 0 0 0 0 rgba(0, 222, 90, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 6px rgba(0, 222, 90, 0.15), 0 0 0 16px rgba(0, 222, 90, 0);
+  }
+}
+.pin {
+  position: absolute;
+  background: var(--primary-700); color: #fff;
+  font-weight: 800; font-size: 11px;
+  padding: 5px 9px; border-radius: 999px;
+  white-space: nowrap;
+  transform: translate(-50%, calc(-100% - 8px));
+  box-shadow: 0 4px 12px rgba(0, 168, 71, 0.4);
+  animation: pin-bounce 1.2s ease-in-out infinite;
+}
+.pin::after {
+  content: ''; position: absolute; left: 50%; bottom: -5px;
+  transform: translateX(-50%);
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid var(--primary-700);
+}
+@keyframes pin-bounce {
+  0%, 100% { transform: translate(-50%, calc(-100% - 8px)); }
+  50%      { transform: translate(-50%, calc(-100% - 14px)); }
 }
 
-.section-label {
-  display: flex; align-items: center; gap: 10px;
-  font-size: 13px; font-weight: 700; color: var(--gray-500);
-  letter-spacing: 0.3px; text-transform: uppercase;
-  margin: 8px 0 14px;
-}
-.section-label::after {
-  content: ''; flex: 1; height: 1px; background: var(--gray-200);
-}
-
-/* Entry cards */
-.entries { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
-.entry {
-  display: flex; align-items: center; gap: 16px;
-  padding: 18px 20px; background: #fff; border: 1px solid var(--gray-200);
-  border-radius: 14px; cursor: pointer; text-align: left;
-  transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: inherit; width: 100%;
-}
-.entry:hover {
-  border-color: var(--primary); transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 222, 90, 0.12);
-}
-.entry.is-active {
-  border-color: var(--primary); background: #F0FDF4;
-  box-shadow: 0 0 0 3px rgba(0, 222, 90, 0.18);
-}
-.entry__num {
-  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
-  background: var(--gray-100); color: var(--gray-700);
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 15px; font-weight: 800;
-  transition: all 180ms;
-}
-.entry.is-active .entry__num,
-.entry:hover .entry__num { background: var(--primary); color: #fff; }
-.entry__body { flex: 1; min-width: 0; }
-.entry__title {
-  font-size: 16px; font-weight: 800; color: var(--gray-900);
-  letter-spacing: -0.3px; margin-bottom: 4px;
-}
-.entry__desc {
-  font-size: 13px; color: var(--gray-500); font-weight: 500; line-height: 1.5;
-}
-.entry__arrow {
-  color: var(--gray-300); font-size: 20px; flex-shrink: 0;
-  transition: all 180ms;
-}
-.entry:hover .entry__arrow,
-.entry.is-active .entry__arrow { color: var(--primary); transform: translateX(4px); }
-
-/* Home button */
-.home-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 8px 14px; background: #fff; border: 1px solid var(--gray-200);
-  border-radius: 999px; cursor: pointer; font-family: inherit;
-  font-size: 13px; font-weight: 700; color: var(--gray-700);
-  transition: all 150ms;
-}
-.home-btn:hover { border-color: var(--gray-900); color: var(--gray-900); }
-.home-btn::before { content: '←'; }
-
-/* Note */
-.note {
-  margin-top: 16px; padding: 14px 16px; background: #F9FAFB;
-  border-left: 3px solid var(--primary); border-radius: 0 8px 8px 0;
-  font-size: 13px; color: var(--gray-700); line-height: 1.6;
-}
-.note strong { color: var(--gray-900); font-weight: 800; }
-
-/* Open in new tab link */
-.open-new {
-  margin-left: auto; font-size: 12px; color: var(--gray-500);
-  text-decoration: none; font-weight: 600;
-  padding: 4px 8px; border-radius: 6px;
-}
-.open-new:hover { background: var(--gray-100); color: var(--gray-900); }
-
-@media (max-width: 900px) {
+@media (max-width: 760px) {
   .report { grid-template-columns: 1fr; }
-  .frame { position: relative; top: 0; margin: 0 auto; }
+  .panel { position: relative; top: 0; }
 }
 </style>
 </head>
 <body>
 <div class="report">
-  <!-- 좌: 모바일 프레임 -->
-  <div class="frame">
-    <iframe id="previewFrame" src="index.html" title="대출모집인 찾기"></iframe>
-  </div>
-
-  <!-- 우: 패널 -->
+  <!-- 좌: 슬림 패널 -->
   <div class="panel">
-    <div class="panel__eyebrow">REPORT · 유입 시나리오</div>
-    <h1 class="panel__title">대출모집인 찾기로<br>들어오는 3가지 길</h1>
-    <p class="panel__sub">
-      좌측은 <strong style="color:var(--gray-900);font-weight:700;">대출모집인 찾기 메인</strong> 화면이에요.<br>
-      아래 카드를 클릭하면 각 유입지점에서 어떻게 진입하는지 시나리오를 볼 수 있어요.
-    </p>
+    <div class="panel__title">대출모집인 찾기<br>유입 시나리오</div>
+    <div class="panel__sub">카드 클릭 → 해당 화면 진입점 강조</div>
 
-    <div class="section-label">유입지점 선택</div>
     <div class="entries">
       <button class="entry" data-href="property-detail.html?id=jaie" data-targets="#ctaConsultants">
         <span class="entry__num">1</span>
-        <span class="entry__body">
-          <span class="entry__title">부동산 매물 상세</span>
-          <span class="entry__desc">청담자이 매물 상세에서 "이 매물 상담 가능한 모집인" 진입</span>
-        </span>
-        <span class="entry__arrow">›</span>
+        <span class="entry__title">부동산 매물 상세</span>
       </button>
-
       <button class="entry" data-href="compare-main.html" data-targets=".consult-strip">
         <span class="entry__num">2</span>
-        <span class="entry__body">
-          <span class="entry__title">주택담보대출 비교 메인</span>
-          <span class="entry__desc">대출비교 진입 화면에서 "대출상담사에게 물어보세요" 영역 진입</span>
-        </span>
-        <span class="entry__arrow">›</span>
+        <span class="entry__title">주담대 비교 메인</span>
       </button>
-
       <button class="entry" data-href="compare-result.html" data-targets=".consult-after-prop,.split-banner .is-consult,.consult-callout">
         <span class="entry__num">3</span>
-        <span class="entry__body">
-          <span class="entry__title">주택담보대출 비교 결과</span>
-          <span class="entry__desc">상품 결과 화면에서 매물 카드 아래 / 한도 부족 / 신청 불가 3개 진입</span>
-        </span>
-        <span class="entry__arrow">›</span>
+        <span class="entry__title">주담대 비교 결과</span>
       </button>
     </div>
 
-    <div style="display:flex; align-items:center; gap:8px;">
-      <button class="home-btn" id="homeBtn">대출모집인 찾기 메인</button>
-      <a class="open-new" id="openNewLink" href="index.html" target="_blank">새 탭에서 열기 ↗</a>
-    </div>
+    <button class="home-btn" id="homeBtn">메인으로</button>
+    <a class="open-new" id="openNewLink" href="index.html" target="_blank">새 탭에서 열기 ↗</a>
+  </div>
 
-    <div class="note">
-      <strong>💡 시나리오 흐름</strong><br>
-      각 유입지점 페이지에는 모집인 진입 CTA가 있어요. CTA를 누르면 다시 메인으로 돌아옵니다.
+  <!-- 우: 프로토타입 (메인 영역) -->
+  <div class="stage">
+    <div class="frame">
+      <iframe id="previewFrame" src="index.html" title="대출모집인 찾기"></iframe>
+      <div class="overlay" id="overlay"></div>
     </div>
   </div>
 </div>
@@ -204,117 +199,97 @@ html, body {
 <script>
 (function () {
   const frame = document.getElementById('previewFrame');
+  const overlay = document.getElementById('overlay');
   const homeBtn = document.getElementById('homeBtn');
   const openNew = document.getElementById('openNewLink');
   const entries = document.querySelectorAll('.entry');
-  let pendingTargets = null;   // selector list to highlight after iframe load
-  let highlightTimers = [];
 
-  // CSS injected into the iframe document
-  const HIGHLIGHT_CSS = `
-    @keyframes report-pulse {
-      0%   { box-shadow: 0 0 0 0 rgba(0, 222, 90, 0.55), 0 0 0 0 rgba(0, 222, 90, 0.35); }
-      60%  { box-shadow: 0 0 0 14px rgba(0, 222, 90, 0), 0 0 0 28px rgba(0, 222, 90, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(0, 222, 90, 0), 0 0 0 0 rgba(0, 222, 90, 0); }
-    }
-    .report-spotlight {
-      position: relative;
-      animation: report-pulse 1.6s ease-out 0s 3;
-      border-radius: 14px;
-      transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .report-spotlight::after {
-      content: ''; position: absolute; inset: -6px;
-      border: 2px solid #00DE5A; border-radius: 16px;
-      pointer-events: none;
-      animation: report-pulse 1.6s ease-out 0s 3;
-    }
-    .report-arrow-pin {
-      position: fixed;
-      z-index: 9999;
-      background: #00A847; color: #fff;
-      font-family: 'Pretendard', sans-serif; font-weight: 800; font-size: 12px;
-      padding: 6px 10px; border-radius: 999px;
-      box-shadow: 0 6px 16px rgba(0, 168, 71, 0.4);
-      pointer-events: none;
-      transform: translate(-50%, -100%);
-      animation: report-bounce 1.2s ease-in-out infinite;
-      letter-spacing: -0.2px;
-    }
-    .report-arrow-pin::after {
-      content: ''; position: absolute; left: 50%; bottom: -5px;
-      transform: translateX(-50%);
-      width: 0; height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 6px solid #00A847;
-    }
-    @keyframes report-bounce {
-      0%, 100% { transform: translate(-50%, -100%); }
-      50%      { transform: translate(-50%, calc(-100% - 6px)); }
-    }
-  `;
+  let pendingTargets = null;
+  let timers = [];
+  let scrollHandler = null;
 
-  function clearHighlights(doc) {
-    if (!doc) return;
-    doc.querySelectorAll('.report-spotlight').forEach(el => el.classList.remove('report-spotlight'));
-    doc.querySelectorAll('.report-arrow-pin').forEach(el => el.remove());
-    highlightTimers.forEach(t => clearTimeout(t));
-    highlightTimers = [];
+  function clearOverlay() {
+    overlay.innerHTML = '';
+    timers.forEach(t => clearTimeout(t));
+    timers = [];
+    if (scrollHandler && frame.contentWindow) {
+      try { frame.contentWindow.removeEventListener('scroll', scrollHandler); } catch(e) {}
+    }
+    scrollHandler = null;
   }
 
-  function injectStyle(doc) {
-    if (doc.getElementById('report-highlight-style')) return;
-    const style = doc.createElement('style');
-    style.id = 'report-highlight-style';
-    style.textContent = HIGHLIGHT_CSS;
-    doc.head.appendChild(style);
+  function placeMarker(spot, pin, el) {
+    const rect = el.getBoundingClientRect();
+    const frameRect = frame.getBoundingClientRect();
+    const overlayRect = overlay.getBoundingClientRect();
+    // iframe 내부 좌표 → overlay 좌표 (iframe과 overlay가 같은 박스이므로 그대로)
+    const top = rect.top;
+    const left = rect.left;
+    spot.style.left = (left - 4) + 'px';
+    spot.style.top = (top - 4) + 'px';
+    spot.style.width = (rect.width + 8) + 'px';
+    spot.style.height = (rect.height + 8) + 'px';
+    if (pin) {
+      pin.style.left = (left + rect.width / 2) + 'px';
+      pin.style.top = top + 'px';
+    }
   }
 
   function highlightTargets(targetsCsv) {
+    clearOverlay();
     const doc = frame.contentDocument;
     if (!doc || !targetsCsv) return;
-    injectStyle(doc);
-    clearHighlights(doc);
-
     const selectors = targetsCsv.split(',').map(s => s.trim()).filter(Boolean);
     const elements = [];
     selectors.forEach(sel => {
       const el = doc.querySelector(sel);
       if (el) elements.push(el);
     });
-    if (!elements.length) return;
+    if (!elements.length) {
+      console.warn('[report] no targets matched:', selectors);
+      return;
+    }
 
     // 첫 타깃으로 스크롤
-    elements[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    try {
+      elements[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (e) {}
 
-    // 순차 강조 (각 600ms 간격)
+    // 스크롤 안정화 대기 후 마커 생성
+    const markers = [];
     elements.forEach((el, i) => {
-      const t1 = setTimeout(() => {
-        el.classList.add('report-spotlight');
-        // 라벨 핀 (여러 개일 때 번호)
-        if (elements.length > 1) {
-          const pin = doc.createElement('div');
-          pin.className = 'report-arrow-pin';
-          pin.textContent = `진입점 ${i + 1}`;
-          doc.body.appendChild(pin);
-          const positionPin = () => {
-            const rect = el.getBoundingClientRect();
-            pin.style.left = (rect.left + rect.width / 2) + 'px';
-            pin.style.top = (rect.top - 4) + 'px';
-          };
-          positionPin();
-          const onScroll = () => positionPin();
-          frame.contentWindow.addEventListener('scroll', onScroll, { passive: true });
-          // 5초 후 핀 제거
-          highlightTimers.push(setTimeout(() => {
-            pin.remove();
-            frame.contentWindow.removeEventListener('scroll', onScroll);
-          }, 5500));
-        }
-      }, i * 700);
-      highlightTimers.push(t1);
+      const spot = doc.createElement ? document.createElement('div') : null;
+      const spotEl = document.createElement('div');
+      spotEl.className = 'spot';
+      const pinEl = elements.length > 1 ? document.createElement('div') : null;
+      if (pinEl) {
+        pinEl.className = 'pin';
+        pinEl.textContent = `진입 ${i + 1}`;
+      }
+      // 등장 지연
+      spotEl.style.opacity = '0';
+      if (pinEl) pinEl.style.opacity = '0';
+      overlay.appendChild(spotEl);
+      if (pinEl) overlay.appendChild(pinEl);
+      markers.push({ el, spot: spotEl, pin: pinEl });
+
+      timers.push(setTimeout(() => {
+        spotEl.style.opacity = '1';
+        if (pinEl) pinEl.style.opacity = '1';
+        placeMarker(spotEl, pinEl, el);
+      }, 350 + i * 250));
     });
+
+    // 스크롤/리사이즈 시 위치 갱신
+    scrollHandler = () => {
+      markers.forEach(m => {
+        if (m.spot.style.opacity === '1') placeMarker(m.spot, m.pin, m.el);
+      });
+    };
+    try {
+      frame.contentWindow.addEventListener('scroll', scrollHandler, { passive: true });
+    } catch (e) {}
+    window.addEventListener('resize', scrollHandler);
   }
 
   function setActive(href) {
@@ -327,12 +302,15 @@ html, body {
     btn.addEventListener('click', () => {
       const href = btn.dataset.href;
       pendingTargets = btn.dataset.targets || null;
-      const sameUrl = frame.contentWindow && frame.contentWindow.location.href.endsWith(href);
+      let sameUrl = false;
+      try {
+        sameUrl = frame.contentWindow && frame.contentWindow.location.href.endsWith(href);
+      } catch (e) {}
       if (sameUrl) {
-        // 이미 같은 페이지면 즉시 다시 강조
         highlightTargets(pendingTargets);
         pendingTargets = null;
       } else {
+        clearOverlay();
         frame.src = href;
       }
       openNew.href = href;
@@ -342,27 +320,28 @@ html, body {
 
   homeBtn.addEventListener('click', () => {
     pendingTargets = null;
+    clearOverlay();
     frame.src = 'index.html';
     openNew.href = 'index.html';
     setActive(null);
   });
 
-  // iframe 로드 완료 시 강조
   frame.addEventListener('load', () => {
+    if (pendingTargets) {
+      // 콘텐츠 레이아웃 안정 대기
+      setTimeout(() => {
+        highlightTargets(pendingTargets);
+        pendingTargets = null;
+      }, 400);
+    }
     try {
       const path = frame.contentWindow.location.pathname.split('/').pop();
-      if (pendingTargets) {
-        // 컨텐츠 렌더링 안정화 대기
-        setTimeout(() => highlightTargets(pendingTargets), 250);
-        pendingTargets = null;
-      }
-      // 활성 카드 동기화
       const search = frame.contentWindow.location.search || '';
       const full = path + search;
       const match = Array.from(entries).find(e => e.dataset.href === full || e.dataset.href.startsWith(path));
       if (match) { setActive(match.dataset.href); openNew.href = match.dataset.href; }
       else if (path === 'index.html' || path === '') { setActive(null); openNew.href = 'index.html'; }
-    } catch (e) { /* cross-origin guard */ }
+    } catch (e) {}
   });
 })();
 </script>
