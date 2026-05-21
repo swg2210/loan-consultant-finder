@@ -384,7 +384,7 @@
     .review__body { font-size: 13.5px; color: var(--gray-700); line-height: 1.6; }
     .review__tag { font-size: 11px; color: var(--primary-700); font-weight: 600; margin-top: 4px; }
     .sheet__cta { position: sticky; bottom: 0; display: flex; gap: 8px; padding: 14px 16px calc(16px + env(safe-area-inset-bottom)); background: #fff; border-top: 1px solid var(--gray-100); }
-    .btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 14px 16px; border-radius: var(--radius-btn); font-size: 14px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; transition: transform 150ms var(--ease-standard); }
+    .btn { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 14px 16px; border-radius: var(--radius-btn); font-size: 14px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; text-decoration: none; transition: transform 150ms var(--ease-standard); }
     .btn:active { transform: scale(0.97); }
     .btn--primary { background: var(--primary); color: #1E1E23; }
     .btn--secondary { background: var(--gray-100); color: var(--gray-900); }
@@ -828,8 +828,8 @@
         </div>` : ''}
         <div style="height:80px"></div>
         <div class="sheet__cta">
-          <button class="btn btn--secondary" onclick="alert('문자 — 프로토타입')">문자</button>
-          <button class="btn btn--primary" onclick="alert('전화 상담 — 프로토타입')">전화 상담</button>
+          <a class="btn btn--secondary" href="sms:01053062767">문자</a>
+          <a class="btn btn--primary" href="tel:01053062767">전화 상담</a>
         </div>`;
       $sheet.classList.add('open');
       $backdrop.classList.add('open');

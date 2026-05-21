@@ -362,6 +362,7 @@
       flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
       padding: 14px 16px; border-radius: var(--radius-btn);
       font-size: 14px; font-weight: 700; border: 0; cursor: pointer; font-family: inherit;
+      text-decoration: none;
       transition: transform 150ms var(--ease-standard);
     }
     .btn:active { transform: scale(0.98); }
@@ -742,8 +743,8 @@
         cta = document.createElement('div');
         cta.className = 'modal__cta';
         cta.innerHTML = `
-          <button class="btn btn--secondary" onclick="alert('문자 — 프로토타입')">문자</button>
-          <button class="btn btn--primary" onclick="alert('전화 상담 — 프로토타입')">전화 상담</button>`;
+          <a class="btn btn--secondary" href="sms:01053062767">문자</a>
+          <a class="btn btn--primary" href="tel:01053062767">전화 상담</a>`;
         $sheet.appendChild(cta);
       }
       $sheet.classList.add('open');
