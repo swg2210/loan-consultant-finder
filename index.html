@@ -89,8 +89,16 @@
     }
     .property__thumb {
       height: 140px;
+      position: relative;
+      overflow: hidden;
       background: repeating-linear-gradient(135deg, #F3F4F6 0 12px, #E5E7EB 12px 24px);
       display: flex; align-items: center; justify-content: center;
+    }
+    .property__thumb img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
     }
     .property__body { padding: 16px; display: flex; align-items: flex-start; }
     .property__info { flex: 1; min-width: 0; }
@@ -414,15 +422,13 @@
     <!-- Property hero -->
     <article class="property" aria-label="검색한 매물">
       <div class="property__thumb">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
-          <path d="M3 21V10l9-7 9 7v11M9 21V13h6v8" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
+        <img src="assets/photos/01.jpg" alt="청담자이 단지" onerror="this.style.display='none'">
       </div>
       <div class="property__body">
         <div class="property__info">
-          <div class="property__name">미캘란쉐르빌</div>
-          <div class="property__unit">101동 1502호</div>
-          <div class="property__price">15억 5,000<span class="suffix">만원</span></div>
+          <div class="property__name">청담자이</div>
+          <div class="property__unit">104동 · 전용89B · 34/35층</div>
+          <div class="property__price">53억<span class="suffix"></span></div>
         </div>
         <button class="property__more">다른 매물 둘러보기 ›</button>
       </div>
