@@ -80,30 +80,28 @@ html, body {
 }
 .open-new:hover { color: var(--gray-900); }
 
-/* 중앙 정렬 스테이지 — iframe은 동일 높이로 고정 (내부 스크롤 유지)
-   * iframe 안의 .sheet 등 position:fixed 원소를 정상 동작시키기 위해 필요 */
+/* 중앙 정렬 스테이지 — iframe은 콘텐츠 높이만큼 펼쳐지고 외부 윈도우가 스크롤한다 */
 .stage {
   position: relative;
   width: 390px;
   margin: 0 auto;
-  min-height: 100vh;
+  padding: 24px 0;
 }
 .frame {
   width: 390px;
-  height: 100vh;
   background: #fff;
   position: relative;
-  overflow: hidden;
   box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
 .frame iframe {
-  width: 100%; height: 100%; border: 0; display: block;
+  width: 100%; border: 0; display: block;
+  height: 100vh; /* 초기값, 로드 후 콘텐츠 높이로 교체 */
 }
 
 /* 오버레이 */
 .overlay {
   position: absolute; inset: 0;
-  pointer-events: none; overflow: hidden;
+  pointer-events: none;
 }
 .spot {
   position: absolute;
@@ -192,15 +190,94 @@ html, body {
   let pendingTargets = null;
   let timers = [];
   let scrollHandler = null;
+  let sheetSyncHandler = null;
+  let sheetObserver = null;
 
   function clearOverlay() {
     overlay.innerHTML = '';
     timers.forEach(t => clearTimeout(t));
     timers = [];
-    if (scrollHandler && frame.contentWindow) {
-      try { frame.contentWindow.removeEventListener('scroll', scrollHandler); } catch(e) {}
+    if (scrollHandler) {
+      window.removeEventListener('scroll', scrollHandler);
+      window.removeEventListener('resize', scrollHandler);
     }
     scrollHandler = null;
+  }
+
+  // iframe을 콘텐츠 높이로 맞추기 (내부 스크롤 제거)
+  function resizeIframeToContent() {
+    try {
+      const doc = frame.contentDocument;
+      if (!doc) return;
+      const h = Math.max(
+        doc.documentElement.scrollHeight,
+        doc.body ? doc.body.scrollHeight : 0
+      );
+      frame.style.height = h + 'px';
+    } catch (e) {}
+  }
+
+  // iframe 안 .sheet / .sheet-backdrop 을 외부 스크롤 좌표 기준으로 재배치
+  // (position:fixed 가 iframe 내 뷰포트에 고정되는 문제 해결)
+  function syncSheetPositions() {
+    const doc = frame.contentDocument;
+    if (!doc) return;
+    const frameRect = frame.getBoundingClientRect();
+    const visibleTop = Math.max(0, -frameRect.top);
+    const viewH = window.innerHeight;
+    doc.querySelectorAll('.sheet-backdrop').forEach(b => {
+      b.style.position = 'absolute';
+      b.style.top = visibleTop + 'px';
+      b.style.left = '0';
+      b.style.right = '0';
+      b.style.width = '100%';
+      b.style.height = viewH + 'px';
+    });
+    doc.querySelectorAll('.sheet').forEach(s => {
+      s.style.position = 'absolute';
+      s.style.left = '50%';
+      s.style.bottom = 'auto';
+      // iframe 안의 vh 단위는 iframe 전체 높이 기준이라 부풀어오르므로 외부 viewport 기준으로 강제
+      s.style.maxHeight = Math.floor(viewH * 0.85) + 'px';
+      s.style.overflowY = 'auto';
+      const isOpen = s.classList.contains('open');
+      const h = s.offsetHeight || 0;
+      if (isOpen) {
+        s.style.transform = 'translateX(-50%)';
+        s.style.top = (visibleTop + viewH - h) + 'px';
+      } else {
+        // 화면 아래로 숨김
+        s.style.transform = 'translateX(-50%)';
+        s.style.top = (visibleTop + viewH + 100) + 'px';
+      }
+    });
+  }
+
+  function attachSheetSync() {
+    detachSheetSync();
+    const doc = frame.contentDocument;
+    if (!doc) return;
+    sheetSyncHandler = () => syncSheetPositions();
+    window.addEventListener('scroll', sheetSyncHandler, { passive: true });
+    window.addEventListener('resize', sheetSyncHandler);
+    // .sheet 의 class 변경(open 토글) 감지
+    sheetObserver = new MutationObserver(() => syncSheetPositions());
+    doc.querySelectorAll('.sheet, .sheet-backdrop').forEach(el => {
+      sheetObserver.observe(el, { attributes: true, attributeFilter: ['class', 'style'] });
+    });
+    syncSheetPositions();
+  }
+
+  function detachSheetSync() {
+    if (sheetSyncHandler) {
+      window.removeEventListener('scroll', sheetSyncHandler);
+      window.removeEventListener('resize', sheetSyncHandler);
+      sheetSyncHandler = null;
+    }
+    if (sheetObserver) {
+      sheetObserver.disconnect();
+      sheetObserver = null;
+    }
   }
 
   function placeMarker(spot, pin, el) {
@@ -234,7 +311,13 @@ html, body {
     });
     if (!elements.length) return;
 
-    try { elements[0].scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+    // 외부 윈도우 스크롤로 첫 타깃을 화면 중앙으로
+    try {
+      const r = elements[0].getBoundingClientRect();
+      const fr = frame.getBoundingClientRect();
+      const targetY = window.scrollY + fr.top + r.top - window.innerHeight / 2 + r.height / 2;
+      window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+    } catch (e) {}
 
     const markers = [];
     elements.forEach((el, i) => {
@@ -272,7 +355,7 @@ html, body {
         if (m.spot.style.opacity === '1') placeMarker(m.spot, m.pin, m.el);
       });
     };
-    try { frame.contentWindow.addEventListener('scroll', scrollHandler, { passive: true }); } catch (e) {}
+    window.addEventListener('scroll', scrollHandler, { passive: true });
     window.addEventListener('resize', scrollHandler);
   }
 
@@ -313,11 +396,34 @@ html, body {
   frame.addEventListener('load', () => {
     // iframe 내부에서 페이지가 바뀌면 항상 기존 강조는 제거
     if (!pendingTargets) clearOverlay();
+    detachSheetSync();
+
+    // 콘텐츠 높이 맞춤 (레이아웃 안정화 후 다시 한번 더)
+    resizeIframeToContent();
+    setTimeout(resizeIframeToContent, 200);
+    setTimeout(resizeIframeToContent, 600);
+
+    // iframe 내부 동적 콘텐츠 변경 감지 (경담사 더보기, 시트 등)
+    try {
+      const doc = frame.contentDocument;
+      if (doc && doc.body && !doc.body.__resizeObserved) {
+        doc.body.__resizeObserved = true;
+        const ro = new ResizeObserver(() => resizeIframeToContent());
+        ro.observe(doc.body);
+      }
+    } catch (e) {}
+
+    // 시트 외부 스크롤 동기화
+    attachSheetSync();
+
     if (pendingTargets) {
       clearOverlay();
       setTimeout(() => {
+        resizeIframeToContent();
         highlightTargets(pendingTargets);
         pendingTargets = null;
+      }, 400);
+    }
       }, 400);
     }
     try {
