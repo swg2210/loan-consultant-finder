@@ -107,9 +107,4 @@ window.CONSULTANTS_DATA = [
     rating:4.7, reviewCount:117, career:8, consultCount:1290, avgRate:3.52,
     respondMins:7, specs:['apt','swap'],
     bio:'주담대·갈아타기 8년. 깔끔한 서류 진행으로 정평이 나 있습니다.' },
-  { id:'jung-mingyu', surname:'정', name:'정민규', bank:'hana',
-    org:'하나은행 압구정지점', regNo:'2020-서울-00892', avatarTone:'#FFF1C7',
-    rating:4.6, reviewCount:154, career:16, consultCount:2540, avgRate:3.48,
-    respondMins:11, specs:['apt','jeonse','swap'],
-    bio:'16년 경력. 압구정·청담 매물 다수 경험. 베테랑의 안정감.' },
 ];
