@@ -230,6 +230,40 @@ html, body {
 .consult-mini__rating {
   font-family: var(--font-en); font-size: 11px; color: var(--gray-800b); font-weight: 700;
 }
+
+/* Selected property strip (between tabs and 대출 sections) */
+.selected-prop {
+  display: flex; align-items: center; gap: 12px;
+  margin: 0 20px 8px; padding: 12px;
+  background: var(--gray-100); border-radius: 12px;
+  text-decoration: none; color: inherit;
+}
+.selected-prop__photo {
+  width: 44px; height: 44px; border-radius: 8px; object-fit: cover; flex-shrink: 0;
+  background: var(--gray-150);
+}
+.selected-prop__info { flex: 1; min-width: 0; }
+.selected-prop__label {
+  font-size: 11px; font-weight: 500; color: var(--gray-600); letter-spacing: -0.3px;
+  margin-bottom: 2px;
+}
+.selected-prop__name-row {
+  display: flex; align-items: center; gap: 6px; margin-bottom: 2px;
+}
+.selected-prop__name {
+  font-size: 15px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.3px;
+}
+.selected-prop__badge {
+  display: inline-flex; align-items: center; padding: 1px 4px;
+  border: 1px solid var(--darkgray-200); border-radius: 4px;
+  font-size: 11px; font-weight: 500; color: var(--darkgray-300); letter-spacing: -0.3px;
+  line-height: 16px; background: var(--white);
+}
+.selected-prop__price {
+  font-size: 13px; color: var(--gray-700); font-weight: 500; letter-spacing: -0.3px;
+}
+.selected-prop__price .num { font-family: var(--font-en); font-weight: 700; color: var(--gray-900); }
+.selected-prop__arrow { color: var(--gray-500); font-size: 14px; }
 </style>
 </head>
 <body>
@@ -257,6 +291,20 @@ html, body {
     <button class="tab__item">전월세</button>
     <button class="tab__item">자동차</button>
   </nav>
+
+  <!-- 선택한 매물 -->
+  <a class="selected-prop" href="property-detail.html?id=jaie">
+    <img class="selected-prop__photo" src="assets/photos/01.jpg" alt="청담자이">
+    <div class="selected-prop__info">
+      <div class="selected-prop__label">선택한 매물</div>
+      <div class="selected-prop__name-row">
+        <span class="selected-prop__name">청담자이</span>
+        <span class="selected-prop__badge">아파트</span>
+      </div>
+      <div class="selected-prop__price">매매 <span class="num">53</span>억</div>
+    </div>
+    <span class="selected-prop__arrow">›</span>
+  </a>
 
   <!-- 대출 새로받기 -->
   <section class="loan-section">
