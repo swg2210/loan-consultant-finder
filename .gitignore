@@ -1,0 +1,16 @@
+# 임시 파일
+.tmp/
+
+# 에디터/OS
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+
+# Node
+node_modules/
+
+# 환경 변수 (혹시라도 실수로 들어와도 차단)
+.env
+.env.*
+!.env.example
