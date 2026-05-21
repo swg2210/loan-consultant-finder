@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>보고용 — 대출모집인 찾기 유입 시나리오</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary: #00DE5A;
+  --primary-700: #00A847;
+  --gray-50: #FAFAFA;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-500: #6B7280;
+  --gray-700: #374151;
+  --gray-900: #1F2937;
+}
+html, body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #EAEAEC; color: var(--gray-900); -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+.report {
+  display: grid;
+  grid-template-columns: minmax(390px, 420px) 1fr;
+  gap: 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  align-items: start;
+}
+
+/* Mobile frame */
+.frame {
+  position: sticky; top: 24px;
+  width: 390px; height: calc(100vh - 64px); min-height: 760px; max-height: 900px;
+  background: #fff; border-radius: 24px; overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+}
+.frame iframe {
+  width: 100%; height: 100%; border: 0; display: block;
+}
+
+/* Right panel */
+.panel { padding-top: 8px; }
+.panel__eyebrow {
+  font-size: 13px; font-weight: 700; color: var(--primary-700);
+  letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 8px;
+}
+.panel__title {
+  font-size: 28px; font-weight: 800; letter-spacing: -0.5px;
+  color: var(--gray-900); line-height: 1.3; margin-bottom: 12px;
+}
+.panel__sub {
+  font-size: 15px; color: var(--gray-700); line-height: 1.6; margin-bottom: 28px;
+  font-weight: 500;
+}
+
+.section-label {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; font-weight: 700; color: var(--gray-500);
+  letter-spacing: 0.3px; text-transform: uppercase;
+  margin: 8px 0 14px;
+}
+.section-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--gray-200);
+}
+
+/* Entry cards */
+.entries { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.entry {
+  display: flex; align-items: center; gap: 16px;
+  padding: 18px 20px; background: #fff; border: 1px solid var(--gray-200);
+  border-radius: 14px; cursor: pointer; text-align: left;
+  transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit; width: 100%;
+}
+.entry:hover {
+  border-color: var(--primary); transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 222, 90, 0.12);
+}
+.entry.is-active {
+  border-color: var(--primary); background: #F0FDF4;
+  box-shadow: 0 0 0 3px rgba(0, 222, 90, 0.18);
+}
+.entry__num {
+  width: 36px; height: 36px; border-radius: 10px; flex-shrink: 0;
+  background: var(--gray-100); color: var(--gray-700);
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 800;
+  transition: all 180ms;
+}
+.entry.is-active .entry__num,
+.entry:hover .entry__num { background: var(--primary); color: #fff; }
+.entry__body { flex: 1; min-width: 0; }
+.entry__title {
+  font-size: 16px; font-weight: 800; color: var(--gray-900);
+  letter-spacing: -0.3px; margin-bottom: 4px;
+}
+.entry__desc {
+  font-size: 13px; color: var(--gray-500); font-weight: 500; line-height: 1.5;
+}
+.entry__arrow {
+  color: var(--gray-300); font-size: 20px; flex-shrink: 0;
+  transition: all 180ms;
+}
+.entry:hover .entry__arrow,
+.entry.is-active .entry__arrow { color: var(--primary); transform: translateX(4px); }
+
+/* Home button */
+.home-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; background: #fff; border: 1px solid var(--gray-200);
+  border-radius: 999px; cursor: pointer; font-family: inherit;
+  font-size: 13px; font-weight: 700; color: var(--gray-700);
+  transition: all 150ms;
+}
+.home-btn:hover { border-color: var(--gray-900); color: var(--gray-900); }
+.home-btn::before { content: '←'; }
+
+/* Note */
+.note {
+  margin-top: 16px; padding: 14px 16px; background: #F9FAFB;
+  border-left: 3px solid var(--primary); border-radius: 0 8px 8px 0;
+  font-size: 13px; color: var(--gray-700); line-height: 1.6;
+}
+.note strong { color: var(--gray-900); font-weight: 800; }
+
+/* Open in new tab link */
+.open-new {
+  margin-left: auto; font-size: 12px; color: var(--gray-500);
+  text-decoration: none; font-weight: 600;
+  padding: 4px 8px; border-radius: 6px;
+}
+.open-new:hover { background: var(--gray-100); color: var(--gray-900); }
+
+@media (max-width: 900px) {
+  .report { grid-template-columns: 1fr; }
+  .frame { position: relative; top: 0; margin: 0 auto; }
+}
+</style>
+</head>
+<body>
+<div class="report">
+  <!-- 좌: 모바일 프레임 -->
+  <div class="frame">
+    <iframe id="previewFrame" src="index.html" title="대출모집인 찾기"></iframe>
+  </div>
+
+  <!-- 우: 패널 -->
+  <div class="panel">
+    <div class="panel__eyebrow">REPORT · 유입 시나리오</div>
+    <h1 class="panel__title">대출모집인 찾기로<br>들어오는 3가지 길</h1>
+    <p class="panel__sub">
+      좌측은 <strong style="color:var(--gray-900);font-weight:700;">대출모집인 찾기 메인</strong> 화면이에요.<br>
+      아래 카드를 클릭하면 각 유입지점에서 어떻게 진입하는지 시나리오를 볼 수 있어요.
+    </p>
+
+    <div class="section-label">유입지점 선택</div>
+    <div class="entries">
+      <button class="entry" data-href="property-detail.html?id=jaie">
+        <span class="entry__num">1</span>
+        <span class="entry__body">
+          <span class="entry__title">부동산 매물 상세</span>
+          <span class="entry__desc">청담자이 매물 상세에서 "이 매물 상담 가능한 모집인" 진입</span>
+        </span>
+        <span class="entry__arrow">›</span>
+      </button>
+
+      <button class="entry" data-href="compare-main.html">
+        <span class="entry__num">2</span>
+        <span class="entry__body">
+          <span class="entry__title">주택담보대출 비교 메인</span>
+          <span class="entry__desc">대출비교 진입 화면에서 "대출상담사에게 물어보세요" 영역 진입</span>
+        </span>
+        <span class="entry__arrow">›</span>
+      </button>
+
+      <button class="entry" data-href="compare-result.html">
+        <span class="entry__num">3</span>
+        <span class="entry__body">
+          <span class="entry__title">주택담보대출 비교 결과</span>
+          <span class="entry__desc">상품 결과 화면에서 매물 카드 아래 / 한도 부족 / 신청 불가 3개 진입</span>
+        </span>
+        <span class="entry__arrow">›</span>
+      </button>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:8px;">
+      <button class="home-btn" id="homeBtn">대출모집인 찾기 메인</button>
+      <a class="open-new" id="openNewLink" href="index.html" target="_blank">새 탭에서 열기 ↗</a>
+    </div>
+
+    <div class="note">
+      <strong>💡 시나리오 흐름</strong><br>
+      각 유입지점 페이지에는 모집인 진입 CTA가 있어요. CTA를 누르면 다시 메인으로 돌아옵니다.
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  const frame = document.getElementById('previewFrame');
+  const homeBtn = document.getElementById('homeBtn');
+  const openNew = document.getElementById('openNewLink');
+  const entries = document.querySelectorAll('.entry');
+
+  function setActive(href) {
+    entries.forEach(e => {
+      e.classList.toggle('is-active', e.dataset.href === href);
+    });
+  }
+
+  entries.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const href = btn.dataset.href;
+      frame.src = href;
+      openNew.href = href;
+      setActive(href);
+    });
+  });
+
+  homeBtn.addEventListener('click', () => {
+    frame.src = 'index.html';
+    openNew.href = 'index.html';
+    setActive(null);
+  });
+
+  // iframe 내부에서 페이지가 바뀌면 우측 활성 카드도 갱신
+  frame.addEventListener('load', () => {
+    try {
+      const path = frame.contentWindow.location.pathname.split('/').pop();
+      const search = frame.contentWindow.location.search || '';
+      const full = path + search;
+      const match = Array.from(entries).find(e => e.dataset.href === full || e.dataset.href.startsWith(path));
+      if (match) { setActive(match.dataset.href); openNew.href = match.dataset.href; }
+      else if (path === 'index.html' || path === '') { setActive(null); openNew.href = 'index.html'; }
+    } catch (e) { /* cross-origin guard */ }
+  });
+})();
+</script>
+</body>
+</html>
