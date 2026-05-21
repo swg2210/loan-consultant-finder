@@ -832,7 +832,7 @@
     }
     $list.addEventListener('click', e => {
       const row = e.target.closest('.row'); if (!row) return;
-      openSheet(row.dataset.id);
+      location.href = 'consultant.html?id=' + encodeURIComponent(row.dataset.id);
     });
     $backdrop.addEventListener('click', closeSheet);
   </script>

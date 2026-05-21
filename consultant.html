@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="pageTitle">상담사 상세</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  <style>
+    :root {
+      --primary: #00DE5A;
+      --primary-700: #00A847;
+      --info-bg: #E6FAEE;
+
+      --match-1: #CCEFD7;
+      --match-2: #7AD89A;
+      --match-3: #00DE5A;
+      --match-4: #00A847;
+
+      --gray-50:  #FAFAFA;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-900: #1F2937;
+
+      --star: #F59E0B;
+
+      --radius-card: 14px;
+      --radius-chip: 10px;
+      --radius-btn: 12px;
+
+      --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      color: var(--gray-900);
+      background: #EAEAEC;
+      font-size: 15px;
+      line-height: 1.5;
+      font-weight: 500;
+    }
+    .shell {
+      max-width: 390px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background: #fff;
+      position: relative;
+      padding-bottom: 96px;
+    }
+
+    /* Top bar */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 8px 8px;
+      background: #fff;
+      position: sticky; top: 0; z-index: 10;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .iconbtn {
+      background: transparent; border: none; padding: 8px; cursor: pointer;
+      border-radius: 8px; display: inline-flex; align-items: center; justify-content: center;
+      color: var(--gray-900);
+    }
+    .iconbtn:active { background: var(--gray-100); }
+    .topbar__title {
+      font-size: 15px; font-weight: 700; color: var(--gray-900);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 24px 20px 20px;
+      display: flex; gap: 16px; align-items: center;
+      background: #fff;
+    }
+    .avatar { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+    .avatar__base {
+      width: 100%; height: 100%; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; font-weight: 800; color: #1F1F23;
+      overflow: hidden;
+    }
+    .avatar__base img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar__bank {
+      position: absolute; right: -2px; bottom: -2px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #fff; padding: 2px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 0 2px #fff;
+    }
+    .avatar__bank img.bank-logo { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .bank-circle { width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; }
+
+    .hero__name { font-size: 22px; font-weight: 800; color: var(--gray-900); }
+    .hero__org { font-size: 13px; color: var(--gray-600); margin-top: 2px; }
+    .hero__regno { font-size: 11px; color: var(--gray-400); margin-top: 4px; }
+    .hero__meta { margin-top: 8px; display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gray-700); }
+    .star { display: inline-flex; align-items: center; gap: 3px; color: var(--star); font-weight: 700; }
+    .star .count { color: var(--gray-500); font-weight: 500; margin-left: 2px; }
+    .meta-divider { color: var(--gray-300); }
+
+    /* Metrics */
+    .metrics {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      margin: 0 20px;
+      background: var(--gray-50);
+      border-radius: var(--radius-card);
+      padding: 16px 0;
+    }
+    .metric { text-align: center; position: relative; }
+    .metric + .metric::before {
+      content: ''; position: absolute; left: 0; top: 14%; bottom: 14%;
+      width: 1px; background: var(--gray-200);
+    }
+    .metric__value { font-size: 18px; font-weight: 800; color: var(--gray-900); }
+    .metric__label { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+
+    /* Sections */
+    .section { padding: 24px 20px 0; }
+    .section__title {
+      font-size: 14px; font-weight: 700; color: var(--gray-900);
+      margin-bottom: 12px;
+    }
+    .bio {
+      font-size: 14px; line-height: 1.65; color: var(--gray-700);
+      margin: 0;
+    }
+
+    /* Specs */
+    .specs { display: flex; flex-wrap: wrap; gap: 6px; }
+    .spec {
+      padding: 6px 10px; background: var(--info-bg); color: var(--primary-700);
+      border-radius: var(--radius-chip); font-size: 12px; font-weight: 700;
+    }
+
+    /* Match */
+    .match-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px;
+      background: var(--gray-50);
+      border-radius: var(--radius-card);
+    }
+    .match-dots { display: inline-flex; gap: 4px; }
+    .match-dots span {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .match-label { font-size: 14px; font-weight: 700; color: var(--gray-900); }
+    .match-reason { font-size: 12px; color: var(--gray-500); }
+
+    /* Reviews */
+    .review {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .review:last-child { border-bottom: 0; }
+    .review__head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .review__date { font-size: 12px; color: var(--gray-400); }
+    .review__body { font-size: 14px; color: var(--gray-800); line-height: 1.6; }
+    .review__tag { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+    /* Sticky bottom CTA */
+    .cta {
+      position: fixed; left: 0; right: 0; bottom: 0;
+      max-width: 390px; margin: 0 auto;
+      padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid var(--gray-100);
+      display: flex; gap: 8px;
+      z-index: 20;
+    }
+    .btn {
+      flex: 1; display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px; padding: 14px 16px;
+      border-radius: var(--radius-btn);
+      font-size: 14px; font-weight: 700; border: 0; cursor: pointer;
+      font-family: inherit; text-decoration: none;
+      transition: transform 150ms var(--ease-standard);
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn--primary { background: var(--primary); color: #1E1E23; }
+    .btn--primary:hover { background: var(--primary-700); color: #fff; }
+    .btn--secondary { background: var(--gray-100); color: var(--gray-900); }
+    .btn--secondary:hover { background: var(--gray-200); }
+
+    /* Empty state */
+    .empty {
+      padding: 80px 20px; text-align: center; color: var(--gray-500);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell" id="shell">
+    <header class="topbar">
+      <button class="iconbtn" onclick="goBack()" aria-label="뒤로">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <div class="topbar__title">상담사 상세</div>
+      <button class="iconbtn" onclick="shareUrl()" aria-label="공유">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M4 12v7a2 2 0 002 2h12a2 2 0 002-2v-7M16 6l-4-4-4 4M12 2v14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </header>
+
+    <div id="content"></div>
+  </main>
+
+  <script src="assets/consultants.js"></script>
+  <script>
+    const BANKS = {
+      shinhan: { name: '신한', short: '신한', color: '#0046FF' },
+      kb:      { name: 'KB국민', short: 'KB',  color: '#FFBC00' },
+      woori:   { name: '우리', short: '우리', color: '#0067AC' },
+      hana:    { name: '하나', short: '하나', color: '#008C95' },
+      nh:      { name: 'NH농협', short: 'NH', color: '#00A651' },
+      kakao:   { name: '카카오뱅크', short: '카뱅', color: '#FFE812' },
+    };
+    const SPECS = {
+      apt: '주택담보', jeonse: '아파트전세', swap: '갈아타기',
+      biz: '사업자담보대출', credit: '신용대출', youth: '청년·신혼',
+    };
+    const BANK_LOGOS = {
+      shinhan: 'assets/banks/shinhan.png',
+      kb:      'assets/banks/kb.png',
+      hana:    'assets/banks/hana.png',
+      woori:   'assets/banks/woori.png',
+      nh:      'assets/banks/nh.png',
+      kakao:   'assets/banks/kakao.png',
+      toss:    'assets/banks/toss.png',
+    };
+    const STAR_SVG = `<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+
+    const MATCH_OVERRIDES = {
+      'kim-seoyoon':  { matchScore:96, matchReason:'이 단지 7건 처리 · 신한 1순위 매칭' },
+      'choi-yeonsu':  { matchScore:89, matchReason:'15억대 31건 · 갈아타기 시뮬 강점' },
+      'park-junhyuk': { matchScore:78, matchReason:'15억대 18건 · 사업자 동시 검토' },
+      'jung-haeun':   { matchScore:71, matchReason:'신한 1순위 매칭 · 경력 5년' },
+      'han-doyoung':  { matchScore:64, matchReason:'15억대 14건 · 실수요 전문' },
+      'lee-jungmin':  { matchScore:42, matchReason:'전세 전문 — 매매와는 거리 있음' },
+    };
+    function autoMatch(c) {
+      const priceRange = Math.floor(c.consultCount / 80);
+      const score = Math.min(85, Math.round(c.rating * 14 + c.career * 1.2));
+      const reason = c.specs.includes('swap')
+        ? `15억대 ${priceRange}건 · 갈아타기 가능`
+        : c.specs.includes('biz')
+          ? `15억대 ${priceRange}건 · 사업자 동시 검토`
+          : `15억대 ${priceRange}건 · 경력 ${c.career}년`;
+      return { matchScore: score, matchReason: reason };
+    }
+
+    function matchLevel(s) {
+      if (s >= 85) return 4;
+      if (s >= 70) return 3;
+      if (s >= 50) return 2;
+      return 1;
+    }
+    function matchLabel(s) {
+      if (s >= 85) return '아주 잘 맞음';
+      if (s >= 70) return '잘 맞음';
+      if (s >= 50) return '보통';
+      return '낮음';
+    }
+    const MATCH_COLORS = ['#CCEFD7', '#7AD89A', '#00DE5A', '#00A847'];
+    function dotsHTML(score) {
+      const lv = matchLevel(score);
+      const c = MATCH_COLORS[lv - 1];
+      let h = '<span class="match-dots" aria-hidden="true">';
+      for (let i = 0; i < 4; i++) h += `<span style="background:${i < lv ? c : '#E5E7EB'}"></span>`;
+      return h + '</span>';
+    }
+
+    function bankCircleHTML(code) {
+      const b = BANKS[code]; if (!b) return '';
+      const logo = BANK_LOGOS[code];
+      if (logo) {
+        return `<img class="bank-logo" src="${logo}" alt="${b.name}"
+          onerror="this.outerHTML='<span class=&quot;bank-circle&quot; style=&quot;background:${b.color};color:${['kb','kakao'].includes(code)?'#1F2937':'#fff'}&quot;>${b.short.slice(0,2)}</span>'">`;
+      }
+      const light = ['kb', 'kakao'].includes(code);
+      return `<span class="bank-circle" style="background:${b.color}; color:${light ? '#1F2937' : '#fff'};">${b.short.slice(0, 2)}</span>`;
+    }
+
+    function avatarHTML(c) {
+      const photo = `assets/consultants/${c.id}.png`;
+      const inner = c.photo !== false
+        ? `<img src="${photo}" alt="${c.name}" onerror="this.replaceWith(document.createTextNode('${c.surname}'))">`
+        : c.surname;
+      return `
+        <div class="avatar">
+          <div class="avatar__base" style="background:${c.avatarTone}">${inner}</div>
+          <div class="avatar__bank">${bankCircleHTML(c.bank)}</div>
+        </div>`;
+    }
+
+    // ── Render ──────────────────────────────────────────
+    const id = new URLSearchParams(location.search).get('id');
+    const $content = document.getElementById('content');
+    const raw = (window.CONSULTANTS_DATA || []).find(x => x.id === id);
+
+    if (!raw) {
+      $content.innerHTML = `
+        <div class="empty">
+          <div style="font-weight:700; margin-bottom:6px;">상담사를 찾을 수 없어요</div>
+          <a href="consultants.html" style="color:var(--primary-700); text-decoration:underline;">전체 상담사로 돌아가기</a>
+        </div>`;
+    } else {
+      const c = { ...raw, ...(MATCH_OVERRIDES[raw.id] || autoMatch(raw)) };
+      const reviews = (window.CONSULTANT_REVIEWS || {})[id] || [];
+      document.getElementById('pageTitle').textContent = `${c.name} — 대출 상담사`;
+
+      $content.innerHTML = `
+        <section class="hero">
+          ${avatarHTML(c)}
+          <div>
+            <div class="hero__name">${c.name}</div>
+            <div class="hero__org">${c.org}</div>
+            <div class="hero__regno">등록번호 ${c.regNo}</div>
+            <div class="hero__meta">
+              <span class="star">${STAR_SVG}<span>${c.rating.toFixed(1)}</span><span class="count">(${c.reviewCount})</span></span>
+              <span class="meta-divider">·</span>
+              <span>평균 응답 ${c.respondMins}분</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="metrics">
+          <div class="metric"><div class="metric__value">${c.career}년</div><div class="metric__label">경력</div></div>
+          <div class="metric"><div class="metric__value">${c.consultCount.toLocaleString()}</div><div class="metric__label">누적 상담</div></div>
+          <div class="metric"><div class="metric__value">${(window.brokerCountOf ? window.brokerCountOf(c) : Math.round(c.consultCount * 0.42)).toLocaleString()}</div><div class="metric__label">대출 중개</div></div>
+        </section>
+
+        <section class="section">
+          <div class="section__title">매물 적합도</div>
+          <div class="match-row">
+            ${dotsHTML(c.matchScore)}
+            <span class="match-label">${matchLabel(c.matchScore)}</span>
+            <span class="match-reason">${c.matchReason}</span>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section__title">전문 분야</div>
+          <div class="specs">${c.specs.map(s => `<span class="spec">${SPECS[s] || s}</span>`).join('')}</div>
+        </section>
+
+        <section class="section">
+          <div class="section__title">소개</div>
+          <p class="bio">${c.bio}</p>
+        </section>
+
+        ${reviews.length ? `
+        <section class="section">
+          <div class="section__title">후기 ${reviews.length}건</div>
+          ${reviews.map(r => `
+            <div class="review">
+              <div class="review__head">
+                <span class="star">${STAR_SVG}<span>${r.rating.toFixed(1)}</span></span>
+                <span class="review__date">${r.date}</span>
+              </div>
+              <div class="review__body">${r.body}</div>
+              <div class="review__tag">#${r.tag}</div>
+            </div>`).join('')}
+        </section>` : ''}
+      `;
+
+      // CTA
+      const cta = document.createElement('div');
+      cta.className = 'cta';
+      cta.innerHTML = `
+        <a class="btn btn--secondary" href="sms:01053062767">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          문자
+        </a>
+        <a class="btn btn--primary" href="tel:01053062767">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          전화 상담
+        </a>`;
+      document.body.appendChild(cta);
+    }
+
+    function goBack() {
+      if (history.length > 1) history.back();
+      else location.href = 'consultants.html';
+    }
+
+    async function shareUrl() {
+      const url = location.href;
+      const title = document.title;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title, url });
+        } else {
+          await navigator.clipboard.writeText(url);
+          alert('링크가 복사됐어요');
+        }
+      } catch (e) { /* user cancel */ }
+    }
+  </script>
+</body>
+</html>

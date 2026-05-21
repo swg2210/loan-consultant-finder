@@ -748,7 +748,7 @@
     }
     $list.addEventListener('click', e => {
       const card = e.target.closest('.ccard'); if (!card) return;
-      openSheet(card.dataset.id);
+      location.href = 'consultant.html?id=' + encodeURIComponent(card.dataset.id);
     });
     $backdrop.addEventListener('click', closeSheet);
     $close.addEventListener('click', closeSheet);
