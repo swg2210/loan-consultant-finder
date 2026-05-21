@@ -309,7 +309,6 @@
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.4);
       z-index: 100; opacity: 0; pointer-events: none;
-      transition: opacity 200ms var(--ease-standard);
     }
     .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
     .sheet {
@@ -319,7 +318,6 @@
       background: #fff; border-radius: 14px 14px 0 0;
       max-height: 85vh; overflow-y: auto;
       z-index: 101;
-      transition: transform 400ms var(--ease-spring);
       box-shadow: 0 -4px 12px rgba(0,0,0,0.12);
     }
     .sheet.open { transform: translate(-50%, 0); }
