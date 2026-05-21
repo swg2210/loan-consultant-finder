@@ -254,15 +254,27 @@ html, body {
     if (anyOpen && !sheetWasOpen) {
       const curIframeH = parseInt(frame.style.height, 10) || 0;
       baseIframeHeight = curIframeH;
-      // iframe 을 화면 높이만큼만 → 시트가 화면 하단에 자연스럽게 붙음
       const vh = Math.max(640, window.innerHeight - 48);
       frame.style.height = vh + 'px';
-      // iframe 상단이 화면 중앙쯤 보이도록 스크롤
+      // iframe 내부 html/body 도 같은 높이로 잠가서 position:fixed 가 iframe 하단에 정확히 붙도록
+      if (doc.documentElement) doc.documentElement.style.height = vh + 'px';
+      if (doc.body) {
+        doc.body.style.height = vh + 'px';
+        doc.body.style.overflow = 'hidden';
+      }
+      // iframe 상단을 화면 위쪽으로 스크롤
       const frameTop = frame.getBoundingClientRect().top + window.scrollY;
       window.scrollTo({ top: Math.max(0, frameTop - 24), behavior: 'smooth' });
-    } else if (!anyOpen && sheetWasOpen && baseIframeHeight) {
-      frame.style.height = baseIframeHeight + 'px';
-      baseIframeHeight = 0;
+    } else if (!anyOpen && sheetWasOpen) {
+      if (doc.documentElement) doc.documentElement.style.height = '';
+      if (doc.body) {
+        doc.body.style.height = '';
+        doc.body.style.overflow = '';
+      }
+      if (baseIframeHeight) {
+        frame.style.height = baseIframeHeight + 'px';
+        baseIframeHeight = 0;
+      }
     }
     sheetWasOpen = anyOpen;
   }
