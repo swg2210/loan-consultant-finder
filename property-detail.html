@@ -40,10 +40,31 @@
     .iconbtn svg{width:24px; height:24px;}
 
     /* Gallery */
-    .gallery{position:relative; display:grid; grid-template-columns:125px 125px 125px; grid-template-rows:120px; gap:1px; background:#fff;}
+    .gallery{
+      position:relative;
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;   /* 구간 넓이 맞춤 자동 분배 → 간격 안 틀어짐 */
+      grid-auto-rows:120px;
+      gap:2px;
+      background:#fff;
+    }
     .gallery__cell{position:relative; overflow:hidden; background:linear-gradient(135deg,#DDE3EC,#C5CEDA);}
     .gallery__cell--main{background:linear-gradient(135deg,#6B7C99,#2E3A52);}
     .gallery__cell--last{background:linear-gradient(135deg,#B8C2D1,#8A95A8);}
+    .gallery__img{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .gallery__cell--last .gallery__img{filter:brightness(0.55);}
+    .gallery__overlay{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff; font-size:13px; font-weight:700;
+      pointer-events:none;
+      text-shadow:0 1px 2px rgba(0,0,0,.4);
+    }
     .img-placeholder{width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:rgba(255,255,255,.7); font-size:11px;}
     .vr-badge{position:absolute; left:8px; top:8px; background:rgba(0,0,0,.55); color:#fff; font-size:11px; font-weight:700; padding:4px 8px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;}
     .vr-badge svg{width:14px; height:10px;}
@@ -57,9 +78,11 @@
     .price{font-size:26px; font-weight:800; letter-spacing:-0.6px; margin:4px 0;}
     .price-sub{font-size:14px; color:var(--gray-500); font-weight:600; display:flex; align-items:center; gap:4px;}
     .qmark{display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; background:var(--gray-200); color:var(--gray-500); font-size:9px; font-weight:800;}
-    .meta-row{display:flex; align-items:center; gap:8px; margin-top:14px; font-size:14px; color:var(--gray-700); font-weight:600;}
-    .meta-row .dot{width:1px; height:12px; background:var(--gray-300);}
-    .alarm-btn{margin-left:auto; width:32px; height:32px; border-radius:8px; background:var(--gray-100); border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;}
+    .meta-row{display:flex; align-items:center; gap:6px; margin-top:14px; font-size:13.5px; color:var(--gray-700); font-weight:600; flex-wrap:nowrap; min-width:0;}
+    .meta-row > span:not(.dot){flex:0 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .meta-row .dot{width:1px; height:12px; background:var(--gray-300); flex-shrink:0;}
+    .alarm-btn{margin-left:auto; flex-shrink:0;}
+    .alarm-btn{width:32px; height:32px; border-radius:8px; background:var(--gray-100); border:none; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;}
     .alarm-btn svg{width:16px; height:16px; color:var(--gray-600);}
     .tagline{margin-top:12px; font-size:14px; font-weight:600; color:var(--gray-700);}
     .badges{margin-top:16px; display:flex; gap:6px; flex-wrap:wrap;}
@@ -166,15 +189,18 @@
 
     <div class="gallery">
       <div class="gallery__cell gallery__cell--main">
-        <div class="img-placeholder">매물 사진</div>
+        <img class="gallery__img" src="assets/photos/01.jpg" alt="청담자이 단지" onerror="this.style.display='none'">
         <div class="vr-badge">
           <svg viewBox="0 0 20 10" fill="currentColor"><path d="M2 1h16v8H2z" fill="none" stroke="currentColor"/><circle cx="6" cy="5" r="1.5"/><circle cx="14" cy="5" r="1.5"/></svg>
           매물투어
         </div>
       </div>
-      <div class="gallery__cell"><div class="img-placeholder">단지 사진</div></div>
+      <div class="gallery__cell">
+        <img class="gallery__img" src="assets/photos/02.jpg" alt="입구" onerror="this.style.display='none'">
+      </div>
       <div class="gallery__cell gallery__cell--last">
-        <div class="img-placeholder">+ 더보기</div>
+        <img class="gallery__img" src="assets/photos/03.jpg" alt="단지 내" onerror="this.style.display='none'">
+        <div class="gallery__overlay">+ 더보기</div>
         <div class="gallery__count">15</div>
       </div>
     </div>
