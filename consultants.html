@@ -631,7 +631,7 @@
               ${c.name}
               ${c.matchScore >= 85 ? `<span class="row__match-tag">${matchLabel(c.matchScore)}</span>` : ''}
             </div>
-            <div class="row__org">${BANKS[c.bank].name} · ${c.org} · 경력 ${c.career}년</div>
+            <div class="row__org">${c.org} · 경력 ${c.career}년</div>
             <div class="row__meta">
               <span class="star">${STAR_SVG}<span>${c.rating.toFixed(1)}</span><span class="count">(${c.reviewCount})</span></span>
               <span class="meta-divider">·</span>
@@ -667,7 +667,7 @@
           ${avatarHTML(c).replace('class="avatar"', 'class="avatar" style="width:64px;height:64px"').replace(/52px/g,'64px')}
           <div>
             <div class="sheet__name">${c.name}</div>
-            <div class="sheet__org">${BANKS[c.bank].name} · ${c.org}</div>
+            <div class="sheet__org">${c.org}</div>
             <div class="sheet__regno">등록번호 ${c.regNo}</div>
           </div>
         </div>
