@@ -196,13 +196,15 @@ html, body {
   font-size: 14px; color: var(--gray-700); margin-bottom: 16px; letter-spacing: -0.3px;
 }
 .consult-row {
-  display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px;
-  scrollbar-width: none;
+  display: flex; gap: 14px; overflow-x: auto; padding: 0 0 12px;
+  scrollbar-width: none; scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -20px; padding-left: 20px; padding-right: 20px;
 }
 .consult-row::-webkit-scrollbar { display: none; }
 .consult-mini {
   flex: 0 0 88px; display: flex; flex-direction: column; align-items: center; gap: 6px;
-  text-decoration: none; color: inherit;
+  text-decoration: none; color: inherit; scroll-snap-align: start;
 }
 .consult-mini__avatar-wrap { position: relative; width: 56px; height: 56px; }
 .consult-mini__avatar {
@@ -442,26 +444,34 @@ html, body {
 <script src="assets/consultants.js"></script>
 <script>
 (function () {
-  const data = (window.CONSULTANTS_DATA || []).slice().sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 8);
-  const bankToLogo = {
-    '신한은행':'shinhan','KB국민은행':'kb','국민은행':'kb','하나은행':'hana','우리은행':'woori',
-    '카카오뱅크':'kakao','케이뱅크':'kbank','토스뱅크':'toss','IBK기업은행':'ibk','기업은행':'ibk',
-    'SC제일은행':'sc','NH농협은행':'nh','농협':'nh','전북은행':'jb'
-  };
+  const all = (window.CONSULTANTS_DATA || []).slice().sort((a, b) => (b.rating || 0) - (a.rating || 0));
+  // 은행별 최고 평점 1명씩 우선 → 다양성 확보
+  const seen = new Set();
+  const diverse = [];
+  for (const c of all) {
+    if (!seen.has(c.bank)) { diverse.push(c); seen.add(c.bank); }
+  }
+  // 부족하면 평점순으로 채움
+  for (const c of all) {
+    if (diverse.length >= 8) break;
+    if (!diverse.includes(c)) diverse.push(c);
+  }
+  const data = diverse.slice(0, 8);
+
   const row = document.getElementById('consultRow');
   if (!row) return;
   row.innerHTML = data.map(c => {
-    const orgKey = (c.organization || '').split(/\s+/)[0];
-    const logoKey = bankToLogo[orgKey] || bankToLogo[c.organization] || 'kb';
+    const logoKey = c.bank || 'kb';
     const photoSrc = `assets/consultants/${c.id}.png`;
+    const orgShort = (c.org || '').split(/\s+/).slice(0, 2).join(' ');
     return `
       <a class="consult-mini" href="index.html">
         <span class="consult-mini__avatar-wrap">
-          <img class="consult-mini__avatar" src="${photoSrc}" alt="${c.name}" onerror="this.style.background='#E6FAEE';this.removeAttribute('src');">
+          <img class="consult-mini__avatar" src="${photoSrc}" alt="${c.name}" style="background:${c.avatarTone || '#E6FAEE'};" onerror="this.removeAttribute('src');">
           <img class="consult-mini__bank" src="assets/banks/${logoKey}.png" alt="">
         </span>
         <span class="consult-mini__name">${c.name}</span>
-        <span class="consult-mini__org">${(c.organization||'').split(/\s+/).slice(0,2).join(' ')}</span>
+        <span class="consult-mini__org">${orgShort}</span>
         <span class="consult-mini__rating">⭐ ${(c.rating||0).toFixed(1)}</span>
       </a>`;
   }).join('');
