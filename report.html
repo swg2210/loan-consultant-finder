@@ -106,7 +106,7 @@ html, body {
   border-radius: 14px;
   box-shadow: 0 0 0 4px rgba(0, 222, 90, 0.25), 0 8px 24px rgba(0,0,0,0.15);
   background: rgba(0, 222, 90, 0.06);
-  animation: spot-pulse 1.4s ease-in-out 2 forwards;
+  animation: spot-pulse 1.4s ease-in-out 1 forwards;
   transition: all 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 @keyframes spot-pulse {
@@ -129,7 +129,7 @@ html, body {
   white-space: nowrap;
   transform: translate(-50%, calc(-100% - 8px));
   box-shadow: 0 4px 12px rgba(0, 168, 71, 0.4);
-  animation: pin-bounce 1.2s ease-in-out 2;
+  animation: pin-bounce 1.2s ease-in-out 1;
 }
 .pin::after {
   content: ''; position: absolute; left: 50%; bottom: -5px;
@@ -200,13 +200,20 @@ html, body {
 
   function placeMarker(spot, pin, el) {
     const rect = el.getBoundingClientRect();
-    spot.style.left = (rect.left - 4) + 'px';
-    spot.style.top = (rect.top - 4) + 'px';
-    spot.style.width = (rect.width + 8) + 'px';
-    spot.style.height = (rect.height + 8) + 'px';
+    const overlayRect = overlay.getBoundingClientRect();
+    // 오버레이 경계 안으로 클램프 (좌우로 샐이져 나가지 않도록)
+    const left = Math.max(2, rect.left - 4);
+    const right = Math.min(overlayRect.width - 2, rect.right + 4);
+    const top = rect.top - 4;
+    const height = rect.height + 8;
+    spot.style.left = left + 'px';
+    spot.style.top = top + 'px';
+    spot.style.width = (right - left) + 'px';
+    spot.style.height = height + 'px';
     if (pin) {
-      pin.style.left = (rect.left + rect.width / 2) + 'px';
-      pin.style.top = rect.top + 'px';
+      const cx = Math.max(30, Math.min(overlayRect.width - 30, rect.left + rect.width / 2));
+      pin.style.left = cx + 'px';
+      pin.style.top = top + 'px';
     }
   }
 
@@ -228,32 +235,30 @@ html, body {
     elements.forEach((el, i) => {
       const spotEl = document.createElement('div');
       spotEl.className = 'spot';
-      const pinEl = elements.length > 1 ? document.createElement('div') : null;
-      if (pinEl) {
-        pinEl.className = 'pin';
-        pinEl.textContent = `진입 ${i + 1}`;
-      }
+      const pinEl = document.createElement('div');
+      pinEl.className = 'pin';
+      pinEl.textContent = '진입';
       spotEl.style.opacity = '0';
-      if (pinEl) pinEl.style.opacity = '0';
+      pinEl.style.opacity = '0';
       overlay.appendChild(spotEl);
-      if (pinEl) overlay.appendChild(pinEl);
+      overlay.appendChild(pinEl);
       markers.push({ el, spot: spotEl, pin: pinEl });
 
       timers.push(setTimeout(() => {
         spotEl.style.opacity = '1';
-        if (pinEl) pinEl.style.opacity = '1';
+        pinEl.style.opacity = '1';
         placeMarker(spotEl, pinEl, el);
       }, 350 + i * 250));
 
-      // 펄스 2회 후 페이드 아웃 (1.4s × 2 = 2.8s + 등장 지연)
-      const fadeStart = 350 + i * 250 + 2800;
+      // 펄스 1회 후 페이드 아웃 (1.4s + 등장 지연)
+      const fadeStart = 350 + i * 250 + 1500;
       timers.push(setTimeout(() => {
         spotEl.classList.add('is-fading');
-        if (pinEl) pinEl.classList.add('is-fading');
+        pinEl.classList.add('is-fading');
       }, fadeStart));
       timers.push(setTimeout(() => {
         spotEl.remove();
-        if (pinEl) pinEl.remove();
+        pinEl.remove();
       }, fadeStart + 450));
     });
 
