@@ -116,3 +116,8 @@ window.CONSULTANTS_DATA = [
     respondMins:7, specs:['apt','swap'],
     bio:'주담대·갈아타기 8년. 깔끔한 서류 진행으로 정평이 나 있습니다.' },
 ];
+
+// 모든 상담사에게 사업자대출(biz) 전문 분야 부여
+window.CONSULTANTS_DATA.forEach(c => {
+  if (!c.specs.includes('biz')) c.specs.push('biz');
+});

@@ -166,6 +166,12 @@
       border-color: var(--primary);
     }
     .chip svg { transition: transform 200ms var(--ease-standard); }
+    .chip--bank { display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px 6px 9px; }
+    .chip--bank .dot {
+      width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+    }
+    .filterbar + .filterbar { padding-top: 2px; }
 
     /* ─────────────────────────────────────────────────────
        Consultant rows (E안)
@@ -443,6 +449,15 @@
       <button class="chip" data-sort="rating" aria-pressed="false">만족도 높은순</button>
       <button class="chip" data-sort="respond" aria-pressed="false">응답 빠른순</button>
     </div>
+    <div class="filterbar" role="tablist" id="bankFilter">
+      <button class="chip chip--bank" data-bank="all" aria-pressed="true">전체</button>
+      <button class="chip chip--bank" data-bank="shinhan" aria-pressed="false"><span class="dot" style="background:#0046FF"></span>신한</button>
+      <button class="chip chip--bank" data-bank="kb" aria-pressed="false"><span class="dot" style="background:#FFBC00"></span>KB</button>
+      <button class="chip chip--bank" data-bank="woori" aria-pressed="false"><span class="dot" style="background:#0067AC"></span>우리</button>
+      <button class="chip chip--bank" data-bank="hana" aria-pressed="false"><span class="dot" style="background:#008C95"></span>하나</button>
+      <button class="chip chip--bank" data-bank="nh" aria-pressed="false"><span class="dot" style="background:#00A651"></span>NH</button>
+      <button class="chip chip--bank" data-bank="kakao" aria-pressed="false"><span class="dot" style="background:#FFE812"></span>카뱅</button>
+    </div>
 
     <!-- Consultant list -->
     <section class="clist" id="clist"></section>
@@ -617,7 +632,10 @@
     const $count = document.getElementById('count');
 
     function renderRows(sortKey) {
-      const sorted = [...CONSULTANTS].sort((a, b) => {
+      const filtered = selectedBanks.has('all')
+        ? CONSULTANTS
+        : CONSULTANTS.filter(c => selectedBanks.has(c.bank));
+      const sorted = [...filtered].sort((a, b) => {
         if (sortKey === 'rating') return b.rating - a.rating;
         if (sortKey === 'respond') return a.respondMins - b.respondMins;
         return b.matchScore - a.matchScore;
@@ -643,14 +661,35 @@
           </svg>
         </div>`).join('');
     }
-    renderRows('match');
+    let currentSort = 'match';
+    const selectedBanks = new Set(['all']);
+    renderRows(currentSort);
 
     // ─── Filter chips ─────────────────────────────────────
     document.querySelectorAll('.chip[data-sort]').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.chip[data-sort]').forEach(b => b.setAttribute('aria-pressed', 'false'));
         btn.setAttribute('aria-pressed', 'true');
-        renderRows(btn.dataset.sort);
+        currentSort = btn.dataset.sort;
+        renderRows(currentSort);
+      });
+    });
+    document.querySelectorAll('#bankFilter .chip[data-bank]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const bank = btn.dataset.bank;
+        if (bank === 'all') {
+          selectedBanks.clear();
+          selectedBanks.add('all');
+        } else {
+          selectedBanks.delete('all');
+          if (selectedBanks.has(bank)) selectedBanks.delete(bank);
+          else selectedBanks.add(bank);
+          if (selectedBanks.size === 0) selectedBanks.add('all');
+        }
+        document.querySelectorAll('#bankFilter .chip[data-bank]').forEach(b => {
+          b.setAttribute('aria-pressed', selectedBanks.has(b.dataset.bank) ? 'true' : 'false');
+        });
+        renderRows(currentSort);
       });
     });
 
