@@ -542,7 +542,6 @@
       el.addEventListener('mousedown', (e) => {
         isDown = true; moved = 0;
         startX = e.pageX; startScroll = el.scrollLeft;
-        el.classList.add('dragging');
       });
       window.addEventListener('mouseup', () => {
         if (!isDown) return;
@@ -554,6 +553,7 @@
         if (!isDown) return;
         const dx = e.pageX - startX;
         moved = Math.max(moved, Math.abs(dx));
+        if (moved > 3) el.classList.add('dragging');
         el.scrollLeft = startScroll - dx;
       });
       // Prevent click navigation when dragged
