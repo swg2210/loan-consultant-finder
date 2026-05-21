@@ -254,48 +254,52 @@ html, body {
     const frameRect = frame.getBoundingClientRect();
     const visibleTop = Math.max(0, -frameRect.top);
     const viewH = window.innerHeight;
-    doc.querySelectorAll('.sheet-backdrop').forEach(b => {
-      b.style.position = 'absolute';
-      b.style.top = visibleTop + 'px';
-      b.style.left = '0';
-      b.style.right = '0';
-      b.style.width = '100%';
-      b.style.height = viewH + 'px';
-    });
-    doc.querySelectorAll('.sheet').forEach(s => {
+    const sheets = doc.querySelectorAll('.sheet');
+    let anyOpen = false;
+    sheets.forEach(s => { if (s.classList.contains('open')) anyOpen = true; });
+
+    sheets.forEach(s => {
       s.style.position = 'absolute';
       s.style.left = '50%';
       s.style.bottom = 'auto';
-      // 내부 스크롤 제거 — 외부 스크롤만 사용
       s.style.maxHeight = 'none';
       s.style.overflowY = 'visible';
       s.style.height = 'auto';
-      const isOpen = s.classList.contains('open');
       s.style.transform = 'translateX(-50%)';
+      const isOpen = s.classList.contains('open');
       if (isOpen) {
-        // 닫힘→열림 전환 시점에만 anchor 설정 (스크롤 시엔 유지)
         if (!sheetWasOpen) {
           sheetAnchorTop = visibleTop + 24;
           const curIframeH = parseInt(frame.style.height, 10) || 0;
           baseIframeHeight = curIframeH;
         }
         s.style.top = sheetAnchorTop + 'px';
-        // iframe 을 시트 끝까지 늘려 외부 스크롤로 볼 수 있게
         const sheetH = s.offsetHeight || 0;
-        const needed = sheetAnchorTop + sheetH + 40;
-        const curIframeH = parseInt(frame.style.height, 10) || 0;
-        if (needed > curIframeH) frame.style.height = needed + 'px';
+        const needed = sheetAnchorTop + sheetH + 24;
+        // iframe 높이를 정확히 시트 끝 + 24 로 — 시트 아래 콘텐츠 노출 방지
+        frame.style.height = needed + 'px';
       } else {
         s.style.top = (visibleTop + viewH + 100) + 'px';
-        // 닫힘 전환 시 iframe 원래 높이로 복원
-        if (sheetWasOpen && baseIframeHeight) {
-          frame.style.height = baseIframeHeight + 'px';
-          baseIframeHeight = 0;
-          sheetAnchorTop = null;
-        }
       }
-      sheetWasOpen = isOpen;
     });
+
+    // backdrop: iframe 전체를 덮음 (시트 위/아래 영역 모두 가림)
+    doc.querySelectorAll('.sheet-backdrop').forEach(b => {
+      b.style.position = 'absolute';
+      b.style.top = '0';
+      b.style.left = '0';
+      b.style.right = '0';
+      b.style.width = '100%';
+      const ifH = parseInt(frame.style.height, 10) || viewH;
+      b.style.height = ifH + 'px';
+    });
+
+    if (!anyOpen && sheetWasOpen && baseIframeHeight) {
+      frame.style.height = baseIframeHeight + 'px';
+      baseIframeHeight = 0;
+      sheetAnchorTop = null;
+    }
+    sheetWasOpen = anyOpen;
   }
 
   function attachSheetSync() {
