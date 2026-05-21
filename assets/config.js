@@ -13,8 +13,8 @@
 window.APP_CONFIG = {
   ncpKeyId: '4kt9b4tmkd',
   property: {
-    lat: 37.3595704,
-    lng: 127.105399,
-    address: '경기도 성남시 분당구 내정로 55',
+    lat: 37.5226,
+    lng: 127.0476,
+    address: '서울특별시 강남구 영동대로138길 12',
   },
 };
