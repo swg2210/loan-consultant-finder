@@ -271,33 +271,34 @@
     .meta-divider { color: var(--gray-300); }
     .respond { color: var(--gray-700); font-weight: 600; }
 
-    /* Info card — 대출모집인이란? */
+    /* Info card — 대출모집인이란? (compact) */
     .info-card {
-      margin: 16px 16px 0; padding: 20px 18px 18px;
-      background: linear-gradient(180deg, #F4FBF6, #fff);
-      border: 1px solid var(--gray-200); border-radius: var(--radius-card);
+      margin: 16px 16px 0; padding: 16px 18px;
+      background: var(--gray-50);
+      border-radius: var(--radius-card);
     }
     .info-card__title {
-      font-size: 17px; font-weight: 800; letter-spacing: -0.3px;
-      color: var(--gray-900); margin: 0 0 8px;
+      font-size: 14px; font-weight: 800; letter-spacing: -0.2px;
+      color: var(--gray-900); margin: 0 0 6px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .info-card__title::before {
+      content: ''; display: inline-block; width: 4px; height: 14px;
+      background: var(--primary); border-radius: 2px;
     }
     .info-card__desc {
-      font-size: 13px; line-height: 1.6; color: var(--gray-700);
-      font-weight: 500; margin: 0 0 16px;
+      font-size: 12.5px; line-height: 1.55; color: var(--gray-700);
+      font-weight: 500; margin: 0 0 10px;
     }
-    .value-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    .info-card__pills {
+      display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
     }
-    .value-cell {
+    .info-pill {
+      font-size: 11.5px; font-weight: 600; color: var(--gray-700);
       background: #fff; border: 1px solid var(--gray-200);
-      border-radius: 12px; padding: 12px 12px 11px;
+      padding: 5px 9px; border-radius: 999px;
     }
-    .value-cell__icon { font-size: 20px; line-height: 1; margin-bottom: 6px; }
-    .value-cell__title { font-size: 13px; font-weight: 800; color: var(--gray-900); margin-bottom: 2px; }
-    .value-cell__desc { font-size: 11.5px; color: var(--gray-500); font-weight: 500; line-height: 1.45; }
     .info-card__source {
-      margin-top: 12px; padding-top: 12px;
-      border-top: 1px solid var(--gray-200);
       font-size: 11px; color: var(--gray-500); font-weight: 500;
     }
     .info-card__source a { color: var(--gray-600); text-decoration: none; font-weight: 600; }
@@ -468,35 +469,19 @@
       <button class="chip" data-sort="career" aria-pressed="false">경력 많은순</button>
     </div>
     <section class="clist" id="clist"></section>
-    <a class="view-all" href="consultants.html">전체 상담사 <em id="totalCount">20</em>명 보기 ›</a>
+    <a class="view-all" href="consultants.html">전체 상담사 보기 ›</a>
 
     <!-- 대출모집인이란? -->
     <section class="info-card">
       <h2 class="info-card__title">대출모집인이란?</h2>
       <p class="info-card__desc">
-        금융회사와 업무위탁계약을 체결하고, 대출 상품 소개·상담·서류 접수 등을 대행하는 <b>금융업협회 등록 전문가</b>입니다. 1사 1전속 원칙에 따라 한 금융회사와만 계약하므로, 소속 은행 상품에 대해 깊은 전문성을 가집니다.
+        금융회사와 계약을 맺고 대출 상담·서류 접수를 대행하는 <b>금융업협회 등록 전문가</b>예요. 1사 1전속이라 소속 은행 상품에 정통합니다.
       </p>
-      <div class="value-grid">
-        <div class="value-cell">
-          <div class="value-cell__icon">⏰</div>
-          <div class="value-cell__title">시간 절약</div>
-          <div class="value-cell__desc">은행 방문 없이 여러 상품을 한 번에 안내받아요</div>
-        </div>
-        <div class="value-cell">
-          <div class="value-cell__icon">📋</div>
-          <div class="value-cell__title">서류·절차 대행</div>
-          <div class="value-cell__desc">서류 준비부터 접수, 심사 확인까지 원스톱</div>
-        </div>
-        <div class="value-cell">
-          <div class="value-cell__icon">💡</div>
-          <div class="value-cell__title">전문 상담</div>
-          <div class="value-cell__desc">대출 조건·금리·상환 방식을 맞춤 추천</div>
-        </div>
-        <div class="value-cell">
-          <div class="value-cell__icon">🛡️</div>
-          <div class="value-cell__title">공인 등록제</div>
-          <div class="value-cell__desc">금융업협회 등록·관리로 안전한 거래</div>
-        </div>
+      <div class="info-card__pills">
+        <span class="info-pill">⏰ 시간 절약</span>
+        <span class="info-pill">📋 서류 대행</span>
+        <span class="info-pill">💡 맞춤 상담</span>
+        <span class="info-pill">🛡️ 공인 등록</span>
       </div>
       <div class="info-card__source">
         출처
