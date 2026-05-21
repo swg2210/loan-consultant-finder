@@ -603,7 +603,7 @@
     };
     const SPECS = {
       apt: '주택담보', jeonse: '아파트전세', swap: '갈아타기',
-      biz: '사업자대출', credit: '신용대출', youth: '청년·신혼',
+      biz: '사업자담보대출', credit: '신용대출', youth: '청년·신혼',
     };
     const BANK_LOGOS = {
       shinhan: 'assets/banks/shinhan.png',
@@ -614,19 +614,7 @@
       kakao:   'assets/banks/kakao.png',
     };
     const CONSULTANTS = window.CONSULTANTS_DATA || [];
-    const REVIEWS = {
-      'kim-seoyoon': [
-        { rating:5, date:'2026.05.04', body:'계약 3일 전에 갑자기 갈아타기 결심했는데 일정 다 맞춰주셨어요. 무리한 권유 없어서 좋았습니다.', tag:'갈아타기' },
-        { rating:5, date:'2026.04.18', body:'여러 은행 비교 견적도 같이 봐주시고 결국 신한 조건이 제일 나았어요. 0.18%p 더 낮춤.', tag:'주담대 신규' },
-      ],
-      'choi-yeonsu': [
-        { rating:5, date:'2026.05.13', body:'첫 통화 5분 만에 한도랑 금리 알려주신다고 했는데 진짜 그렇게 됐어요. 베테랑 느낌.', tag:'갈아타기' },
-        { rating:5, date:'2026.05.02', body:'중도상환수수료 계산해서 갈아타기 손익까지 같이 봐줘요. 다른 분들과 깊이가 다름.', tag:'갈아타기' },
-      ],
-      'park-junhyuk': [
-        { rating:5, date:'2026.05.11', body:'사업자대출 + 주담대 동시에 봐주실 분 찾기 어려운데 도움 많이 됐어요.', tag:'사업자 · 주담대' },
-      ],
-    };
+    const REVIEWS = window.CONSULTANT_REVIEWS || {};
     const STAR_SVG = `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
 
     function bankCircleHTML(code) {
