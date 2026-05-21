@@ -37,7 +37,7 @@ window.PROPERTIES = {
   lwell: {
     name: '청담르엘 101동',
     nameShort: '청담르엘',
-    photos: ['청담르엘01.jpg', '청담르엘02.jpg', '청담르엘03.jpg'],
+    photos: ['lwell-01.jpg', 'lwell-02.jpg', 'lwell-03.jpg'],
     price: '매매 68억',
     pricePerPyeong: '1억 9,500만원/3.3㎡',
     area: '115B㎡(전용136A)',
@@ -67,7 +67,7 @@ window.PROPERTIES = {
   ipark: {
     name: '청담 아이파크 105동',
     nameShort: '청담 아이파크',
-    photos: ['청담 아이파크(01).jpg', '청담 아이파크(02).jpg', '청담 아이파크(03).jpg'],
+    photos: ['ipark-01.jpg', 'ipark-02.jpg', 'ipark-03.jpg'],
     price: '매매 32억',
     pricePerPyeong: '7,800만원/3.3㎡',
     area: '137(2,4호)㎡(전용110)',
