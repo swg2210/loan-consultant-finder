@@ -352,9 +352,9 @@
     .bottom-pad { height: 48px; }
 
     /* Detail sheet — same as consultants.html */
-    .sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease-standard); }
+    .sheet-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; opacity: 0; pointer-events: none; }
     .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
-    .sheet { position: fixed; left: 50%; bottom: 0; transform: translate(-50%, 100%); width: 100%; max-width: 390px; background: #fff; border-radius: 14px 14px 0 0; max-height: 85vh; overflow-y: auto; z-index: 101; transition: transform 400ms var(--ease-spring); box-shadow: 0 -4px 12px rgba(0,0,0,0.12); }
+    .sheet { position: fixed; left: 50%; bottom: 0; transform: translate(-50%, 100%); width: 100%; max-width: 390px; background: #fff; border-radius: 14px 14px 0 0; max-height: 85vh; overflow-y: auto; z-index: 101; box-shadow: 0 -4px 12px rgba(0,0,0,0.12); }
     .sheet.open { transform: translate(-50%, 0); }
     .sheet__handle { width: 32px; height: 4px; background: var(--gray-300); border-radius: 2px; margin: 8px auto 4px; }
     .sheet__header { display: flex; gap: 14px; align-items: center; padding: 16px 20px 14px; }
