@@ -371,10 +371,10 @@
     document.getElementById('pageTitle').textContent = `${P.name} — 매물 상세`;
 
     // 갤러리
-    document.getElementById('gImg1').src = `assets/photos/${P.photos[0]}`;
+    document.getElementById('gImg1').src = encodeURI(`assets/photos/${P.photos[0]}`);
     document.getElementById('gImg1').alt = P.nameShort;
-    document.getElementById('gImg2').src = `assets/photos/${P.photos[1]}`;
-    document.getElementById('gImg3').src = `assets/photos/${P.photos[2]}`;
+    document.getElementById('gImg2').src = encodeURI(`assets/photos/${P.photos[1]}`);
+    document.getElementById('gImg3').src = encodeURI(`assets/photos/${P.photos[2]}`);
 
     // 가격 영역
     document.getElementById('propName').textContent = P.name;
