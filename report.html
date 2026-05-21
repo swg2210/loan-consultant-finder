@@ -242,64 +242,27 @@ html, body {
     } catch (e) {}
   }
 
-  // iframe 안 .sheet / .sheet-backdrop 을 외부 스크롤 좌표 기준으로 재배치
-  // (position:fixed 가 iframe 내 뷰포트에 고정되는 문제 해결)
-  // 시트는 내부 스크롤 없이 전체 콘텐츠 높이로 그리고, iframe 자체를 늘려서
-  // 외부 페이지 스크롤만으로 시트 끝까지 볼 수 있게 함.
-  let sheetAnchorTop = null; // 시트 연 시점의 문서 좌표 (스크롤해도 고정)
-  let baseIframeHeight = 0;  // 시트 열기 전 iframe 본래 높이
+  // 시트가 열리면 iframe 을 뷰포트 높이로 줄이고 스크롤 위치를 iframe 상단으로 이동.
+  // 시트는 원본 CSS(position:fixed; bottom:0) 그대로 iframe 뷰포트 하단에 붙는다.
+  let baseIframeHeight = 0;
   let sheetWasOpen = false;
 
   function syncSheetPositions() {
     const doc = frame.contentDocument;
     if (!doc) return;
-    const frameRect = frame.getBoundingClientRect();
-    const visibleTop = Math.max(0, -frameRect.top);
-    const viewH = window.innerHeight;
-    const sheets = doc.querySelectorAll('.sheet');
-    let anyOpen = false;
-    sheets.forEach(s => { if (s.classList.contains('open')) anyOpen = true; });
-
-    sheets.forEach(s => {
-      s.style.position = 'absolute';
-      s.style.left = '50%';
-      s.style.bottom = 'auto';
-      s.style.maxHeight = 'none';
-      s.style.overflowY = 'visible';
-      s.style.height = 'auto';
-      s.style.transform = 'translateX(-50%)';
-      const isOpen = s.classList.contains('open');
-      if (isOpen) {
-        if (!sheetWasOpen) {
-          sheetAnchorTop = visibleTop + 24;
-          const curIframeH = parseInt(frame.style.height, 10) || 0;
-          baseIframeHeight = curIframeH;
-        }
-        s.style.top = sheetAnchorTop + 'px';
-        const sheetH = s.offsetHeight || 0;
-        const needed = sheetAnchorTop + sheetH + 24;
-        // iframe 높이를 정확히 시트 끝 + 24 로 — 시트 아래 콘텐츠 노출 방지
-        frame.style.height = needed + 'px';
-      } else {
-        s.style.top = (visibleTop + viewH + 100) + 'px';
-      }
-    });
-
-    // backdrop: iframe 전체를 덮음 (시트 위/아래 영역 모두 가림)
-    doc.querySelectorAll('.sheet-backdrop').forEach(b => {
-      b.style.position = 'absolute';
-      b.style.top = '0';
-      b.style.left = '0';
-      b.style.right = '0';
-      b.style.width = '100%';
-      const ifH = parseInt(frame.style.height, 10) || viewH;
-      b.style.height = ifH + 'px';
-    });
-
-    if (!anyOpen && sheetWasOpen && baseIframeHeight) {
+    const anyOpen = !!doc.querySelector('.sheet.open');
+    if (anyOpen && !sheetWasOpen) {
+      const curIframeH = parseInt(frame.style.height, 10) || 0;
+      baseIframeHeight = curIframeH;
+      // iframe 을 화면 높이만큼만 → 시트가 화면 하단에 자연스럽게 붙음
+      const vh = Math.max(640, window.innerHeight - 48);
+      frame.style.height = vh + 'px';
+      // iframe 상단이 화면 중앙쯤 보이도록 스크롤
+      const frameTop = frame.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: Math.max(0, frameTop - 24), behavior: 'smooth' });
+    } else if (!anyOpen && sheetWasOpen && baseIframeHeight) {
       frame.style.height = baseIframeHeight + 'px';
       baseIframeHeight = 0;
-      sheetAnchorTop = null;
     }
     sheetWasOpen = anyOpen;
   }
