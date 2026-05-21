@@ -10,7 +10,6 @@
 :root {
   --primary: #00DE5A;
   --primary-700: #00A847;
-  --gray-50: #FAFAFA;
   --gray-100: #F3F4F6;
   --gray-200: #E5E7EB;
   --gray-300: #D1D5DB;
@@ -24,36 +23,21 @@ html, body {
   min-height: 100vh;
 }
 
-/* 좌측 슬림 사이드바 + 우측 프로토타입 */
-.report {
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 24px;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 24px;
-  align-items: start;
-  min-height: 100vh;
-}
-
+/* 좌측 상단 고정 패널 */
 .panel {
-  position: sticky; top: 24px;
-  display: flex; flex-direction: column; gap: 10px;
+  position: fixed; top: 24px; left: 24px;
+  width: 220px; z-index: 10;
+  display: flex; flex-direction: column; gap: 8px;
 }
 .panel__title {
-  font-size: 15px; font-weight: 800; color: var(--gray-900);
-  letter-spacing: -0.3px; line-height: 1.4; margin-bottom: 4px;
+  font-size: 14px; font-weight: 800; color: var(--gray-900);
+  letter-spacing: -0.3px; line-height: 1.4; margin-bottom: 6px;
 }
-.panel__sub {
-  font-size: 12px; color: var(--gray-500); font-weight: 500;
-  line-height: 1.5; margin-bottom: 8px;
-}
-
-.entries { display: flex; flex-direction: column; gap: 8px; }
+.entries { display: flex; flex-direction: column; gap: 6px; }
 .entry {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; background: #fff; border: 1px solid var(--gray-200);
-  border-radius: 10px; cursor: pointer; text-align: left;
+  padding: 9px 11px; background: #fff; border: 1px solid var(--gray-200);
+  border-radius: 9px; cursor: pointer; text-align: left;
   transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
   font-family: inherit; width: 100%;
 }
@@ -66,55 +50,55 @@ html, body {
   box-shadow: 0 0 0 2px rgba(0, 222, 90, 0.18);
 }
 .entry__num {
-  width: 24px; height: 24px; border-radius: 7px; flex-shrink: 0;
+  width: 22px; height: 22px; border-radius: 6px; flex-shrink: 0;
   background: var(--gray-100); color: var(--gray-700);
   display: inline-flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 800;
+  font-size: 11px; font-weight: 800;
 }
 .entry.is-active .entry__num,
 .entry:hover .entry__num { background: var(--primary); color: #fff; }
 .entry__title {
-  font-size: 12.5px; font-weight: 700; color: var(--gray-900);
+  font-size: 12px; font-weight: 700; color: var(--gray-900);
   letter-spacing: -0.2px; line-height: 1.35;
 }
 
 .home-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 4px;
-  padding: 8px 12px; background: #fff; border: 1px solid var(--gray-200);
-  border-radius: 8px; cursor: pointer; font-family: inherit;
-  font-size: 12px; font-weight: 700; color: var(--gray-700);
-  transition: all 150ms; margin-top: 8px;
+  padding: 7px 10px; background: #fff; border: 1px solid var(--gray-200);
+  border-radius: 7px; cursor: pointer; font-family: inherit;
+  font-size: 11.5px; font-weight: 700; color: var(--gray-700);
+  transition: all 150ms; margin-top: 4px;
 }
 .home-btn:hover { border-color: var(--gray-900); color: var(--gray-900); }
 .home-btn::before { content: '←'; }
-
 .open-new {
   font-size: 11px; color: var(--gray-500);
-  text-decoration: none; font-weight: 600;
-  padding: 4px 0; text-align: center;
+  text-decoration: none; font-weight: 600; text-align: center;
 }
 .open-new:hover { color: var(--gray-900); }
 
-/* 우측: 모바일 프레임 + 오버레이 컨테이너 */
+/* 중앙 정렬 스테이지 — 폰 프레임 없음 */
 .stage {
   position: relative;
-  width: 390px; margin: 0 auto;
+  width: 390px;
+  margin: 0 auto;
+  min-height: 100vh;
 }
 .frame {
-  width: 390px; height: calc(100vh - 48px); min-height: 760px; max-height: 920px;
-  background: #fff; border-radius: 28px; overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.15), 0 0 0 1px rgba(0,0,0,0.04);
+  width: 390px;
+  height: 100vh;
+  background: #fff;
   position: relative;
+  overflow: hidden;
 }
 .frame iframe {
   width: 100%; height: 100%; border: 0; display: block;
 }
 
-/* 오버레이 — iframe 위에 절대 위치 링/핀 표시 */
+/* 오버레이 */
 .overlay {
   position: absolute; inset: 0;
   pointer-events: none; overflow: hidden;
-  border-radius: 28px;
 }
 .spot {
   position: absolute;
@@ -154,45 +138,37 @@ html, body {
   0%, 100% { transform: translate(-50%, calc(-100% - 8px)); }
   50%      { transform: translate(-50%, calc(-100% - 14px)); }
 }
-
-@media (max-width: 760px) {
-  .report { grid-template-columns: 1fr; }
-  .panel { position: relative; top: 0; }
-}
 </style>
 </head>
 <body>
-<div class="report">
-  <!-- 좌: 슬림 패널 -->
-  <div class="panel">
-    <div class="panel__title">대출모집인 찾기<br>유입 시나리오</div>
-    <div class="panel__sub">카드 클릭 → 해당 화면 진입점 강조</div>
+<!-- 좌측 상단 고정 패널 -->
+<div class="panel">
+  <div class="panel__title">대출모집인 찾기<br>유입 시나리오</div>
 
-    <div class="entries">
-      <button class="entry" data-href="property-detail.html?id=jaie" data-targets="#ctaConsultants">
-        <span class="entry__num">1</span>
-        <span class="entry__title">부동산 매물 상세</span>
-      </button>
-      <button class="entry" data-href="compare-main.html" data-targets=".consult-strip">
-        <span class="entry__num">2</span>
-        <span class="entry__title">주담대 비교 메인</span>
-      </button>
-      <button class="entry" data-href="compare-result.html" data-targets=".consult-after-prop,.split-banner .is-consult,.consult-callout">
-        <span class="entry__num">3</span>
-        <span class="entry__title">주담대 비교 결과</span>
-      </button>
-    </div>
-
-    <button class="home-btn" id="homeBtn">메인으로</button>
-    <a class="open-new" id="openNewLink" href="index.html" target="_blank">새 탭에서 열기 ↗</a>
+  <div class="entries">
+    <button class="entry" data-href="property-detail.html?id=jaie" data-targets="#ctaConsultants">
+      <span class="entry__num">1</span>
+      <span class="entry__title">부동산 매물 상세</span>
+    </button>
+    <button class="entry" data-href="compare-main.html" data-targets=".consult-strip">
+      <span class="entry__num">2</span>
+      <span class="entry__title">주담대 비교 메인</span>
+    </button>
+    <button class="entry" data-href="compare-result.html" data-targets=".consult-after-prop,.split-banner .is-consult,.consult-callout">
+      <span class="entry__num">3</span>
+      <span class="entry__title">주담대 비교 결과</span>
+    </button>
   </div>
 
-  <!-- 우: 프로토타입 (메인 영역) -->
-  <div class="stage">
-    <div class="frame">
-      <iframe id="previewFrame" src="index.html" title="대출모집인 찾기"></iframe>
-      <div class="overlay" id="overlay"></div>
-    </div>
+  <button class="home-btn" id="homeBtn">메인으로</button>
+  <a class="open-new" id="openNewLink" href="index.html" target="_blank">새 탭에서 열기 ↗</a>
+</div>
+
+<!-- 중앙 스테이지 -->
+<div class="stage">
+  <div class="frame">
+    <iframe id="previewFrame" src="index.html" title="대출모집인 찾기"></iframe>
+    <div class="overlay" id="overlay"></div>
   </div>
 </div>
 
@@ -220,18 +196,13 @@ html, body {
 
   function placeMarker(spot, pin, el) {
     const rect = el.getBoundingClientRect();
-    const frameRect = frame.getBoundingClientRect();
-    const overlayRect = overlay.getBoundingClientRect();
-    // iframe 내부 좌표 → overlay 좌표 (iframe과 overlay가 같은 박스이므로 그대로)
-    const top = rect.top;
-    const left = rect.left;
-    spot.style.left = (left - 4) + 'px';
-    spot.style.top = (top - 4) + 'px';
+    spot.style.left = (rect.left - 4) + 'px';
+    spot.style.top = (rect.top - 4) + 'px';
     spot.style.width = (rect.width + 8) + 'px';
     spot.style.height = (rect.height + 8) + 'px';
     if (pin) {
-      pin.style.left = (left + rect.width / 2) + 'px';
-      pin.style.top = top + 'px';
+      pin.style.left = (rect.left + rect.width / 2) + 'px';
+      pin.style.top = rect.top + 'px';
     }
   }
 
@@ -245,20 +216,12 @@ html, body {
       const el = doc.querySelector(sel);
       if (el) elements.push(el);
     });
-    if (!elements.length) {
-      console.warn('[report] no targets matched:', selectors);
-      return;
-    }
+    if (!elements.length) return;
 
-    // 첫 타깃으로 스크롤
-    try {
-      elements[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } catch (e) {}
+    try { elements[0].scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
 
-    // 스크롤 안정화 대기 후 마커 생성
     const markers = [];
     elements.forEach((el, i) => {
-      const spot = doc.createElement ? document.createElement('div') : null;
       const spotEl = document.createElement('div');
       spotEl.className = 'spot';
       const pinEl = elements.length > 1 ? document.createElement('div') : null;
@@ -266,7 +229,6 @@ html, body {
         pinEl.className = 'pin';
         pinEl.textContent = `진입 ${i + 1}`;
       }
-      // 등장 지연
       spotEl.style.opacity = '0';
       if (pinEl) pinEl.style.opacity = '0';
       overlay.appendChild(spotEl);
@@ -280,15 +242,12 @@ html, body {
       }, 350 + i * 250));
     });
 
-    // 스크롤/리사이즈 시 위치 갱신
     scrollHandler = () => {
       markers.forEach(m => {
         if (m.spot.style.opacity === '1') placeMarker(m.spot, m.pin, m.el);
       });
     };
-    try {
-      frame.contentWindow.addEventListener('scroll', scrollHandler, { passive: true });
-    } catch (e) {}
+    try { frame.contentWindow.addEventListener('scroll', scrollHandler, { passive: true }); } catch (e) {}
     window.addEventListener('resize', scrollHandler);
   }
 
@@ -328,7 +287,6 @@ html, body {
 
   frame.addEventListener('load', () => {
     if (pendingTargets) {
-      // 콘텐츠 레이아웃 안정 대기
       setTimeout(() => {
         highlightTargets(pendingTargets);
         pendingTargets = null;
