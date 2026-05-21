@@ -80,28 +80,28 @@ html, body {
 }
 .open-new:hover { color: var(--gray-900); }
 
-/* 중앙 정렬 스테이지 — 폰 프레임 없음 */
+/* 중앙 정렬 스테이지 — iframe 자체가 콘텐츠 높이만큼 늘어난다 (내부 스크롤 X) */
 .stage {
   position: relative;
   width: 390px;
   margin: 0 auto;
-  min-height: 100vh;
+  padding: 24px 0;
 }
 .frame {
   width: 390px;
-  height: 100vh;
   background: #fff;
   position: relative;
-  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
 }
 .frame iframe {
-  width: 100%; height: 100%; border: 0; display: block;
+  width: 100%; border: 0; display: block;
+  height: 100vh; /* 초기값, 로드 후 콘텐츠 높이로 교체 */
 }
 
 /* 오버레이 */
 .overlay {
   position: absolute; inset: 0;
-  pointer-events: none; overflow: hidden;
+  pointer-events: none;
 }
 .spot {
   position: absolute;
@@ -195,8 +195,8 @@ html, body {
     overlay.innerHTML = '';
     timers.forEach(t => clearTimeout(t));
     timers = [];
-    if (scrollHandler && frame.contentWindow) {
-      try { frame.contentWindow.removeEventListener('scroll', scrollHandler); } catch(e) {}
+    if (scrollHandler) {
+      window.removeEventListener('resize', scrollHandler);
     }
     scrollHandler = null;
   }
@@ -232,7 +232,13 @@ html, body {
     });
     if (!elements.length) return;
 
-    try { elements[0].scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+    // 외부 윈도우 스크롤로 첫 타깃을 화면 중앙으로
+    try {
+      const r = elements[0].getBoundingClientRect();
+      const fr = frame.getBoundingClientRect();
+      const targetY = window.scrollY + fr.top + r.top - window.innerHeight / 2 + r.height / 2;
+      window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+    } catch (e) {}
 
     const markers = [];
     elements.forEach((el, i) => {
@@ -270,7 +276,6 @@ html, body {
         if (m.spot.style.opacity === '1') placeMarker(m.spot, m.pin, m.el);
       });
     };
-    try { frame.contentWindow.addEventListener('scroll', scrollHandler, { passive: true }); } catch (e) {}
     window.addEventListener('resize', scrollHandler);
   }
 
@@ -308,12 +313,41 @@ html, body {
     setActive(null);
   });
 
+  // iframe을 콘텐츠 높이만큼 키우기 (내부 스크롤 제거)
+  function resizeIframeToContent() {
+    try {
+      const doc = frame.contentDocument;
+      if (!doc) return;
+      const h = Math.max(
+        doc.documentElement.scrollHeight,
+        doc.body ? doc.body.scrollHeight : 0
+      );
+      frame.style.height = h + 'px';
+    } catch (e) {}
+  }
+
   frame.addEventListener('load', () => {
     // iframe 내부에서 페이지가 바뀌면 항상 기존 강조는 제거
     if (!pendingTargets) clearOverlay();
+    // 콘텐츠 높이 맞춤 (레이아웃 안정화 후 다시 한번 더)
+    resizeIframeToContent();
+    setTimeout(resizeIframeToContent, 200);
+    setTimeout(resizeIframeToContent, 600);
+
+    // iframe 내부 동적 콘텐츠 변경 감지 (경담사 더보기, 시트 등)
+    try {
+      const doc = frame.contentDocument;
+      if (doc && doc.body && !doc.body.__resizeObserved) {
+        doc.body.__resizeObserved = true;
+        const ro = new ResizeObserver(() => resizeIframeToContent());
+        ro.observe(doc.body);
+      }
+    } catch (e) {}
+
     if (pendingTargets) {
       clearOverlay();
       setTimeout(() => {
+        resizeIframeToContent();
         highlightTargets(pendingTargets);
         pendingTargets = null;
       }, 400);
