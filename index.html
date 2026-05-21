@@ -211,6 +211,18 @@
 
     /* Consultant rows */
     .clist { padding: 0 16px 8px; }
+    .view-all {
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+      margin: 4px 16px 8px;
+      padding: 13px 16px;
+      background: #fff; border: 1px solid var(--gray-300);
+      border-radius: 12px;
+      font-size: 13.5px; font-weight: 700; color: var(--gray-700);
+      text-decoration: none; cursor: pointer; font-family: inherit;
+      transition: background 120ms var(--ease-standard);
+    }
+    .view-all:hover { background: var(--gray-100); }
+    .view-all em { font-style: normal; color: var(--primary-700); margin-left: 2px; }
     .row {
       display: flex; gap: 14px; align-items: center;
       padding: 16px 4px; background: #fff; cursor: pointer;
@@ -448,7 +460,7 @@
 
     <!-- 상담사 리스트 -->
     <div class="section-title-row">
-      <h2 class="section-title">평점 높은 상담사 <em id="count">6</em></h2>
+      <h2 class="section-title">평점 높은 상담사 <em id="count">5</em></h2>
     </div>
     <div class="filterbar" role="tablist">
       <button class="chip" data-sort="rating" aria-pressed="true">별점 높은순</button>
@@ -456,6 +468,7 @@
       <button class="chip" data-sort="career" aria-pressed="false">경력 많은순</button>
     </div>
     <section class="clist" id="clist"></section>
+    <a class="view-all" href="consultants.html">전체 상담사 <em id="totalCount">20</em>명 보기 ›</a>
 
     <!-- 대출모집인이란? -->
     <section class="info-card">
@@ -569,6 +582,7 @@
   </aside>
 
   <script src="assets/properties.js"></script>
+  <script src="assets/consultants.js"></script>
   <script>
     // ─── Search box ───────────────────────────────
     (function () {
@@ -663,38 +677,7 @@
       apt: '주택담보', jeonse: '아파트전세', swap: '갈아타기',
       biz: '사업자대출', credit: '신용대출', youth: '청년·신혼',
     };
-    const CONSULTANTS = [
-      { id:'kim-seoyoon', surname:'김', name:'김서윤', bank:'shinhan',
-        org:'신한부동산금융 강남센터', regNo:'2024-서울-04812', avatarTone:'#FDE2D7',
-        rating:4.9, reviewCount:127, career:12, consultCount:2340, avgRate:3.42,
-        respondMins:4, specs:['apt','swap','jeonse'],
-        bio:'주담대 12년, 갈아타기 전문. 매물 계약 일정에 맞춰 빠르게 진행합니다. 무리한 권유 없이 조건만 정확히 안내해요.' },
-      { id:'choi-yeonsu', surname:'최', name:'최연수', bank:'hana',
-        org:'하나금융 강남파이낸스센터', regNo:'2022-서울-02945', avatarTone:'#FFF1C7',
-        rating:4.9, reviewCount:312, career:15, consultCount:3580, avgRate:3.38,
-        respondMins:3, specs:['apt','swap','biz'],
-        bio:'15년 경력. 갈아타기·중도상환 시뮬레이션 강점. 첫 통화 5분 안에 가능 한도 안내해요.' },
-      { id:'park-junhyuk', surname:'박', name:'박준혁', bank:'kb',
-        org:'KB부동산신탁 강남지점', regNo:'2024-서울-01234', avatarTone:'#CCEFD7',
-        rating:4.8, reviewCount:214, career:9, consultCount:1820, avgRate:3.51,
-        respondMins:7, specs:['apt','biz'],
-        bio:'KB 전속 9년. 사업자대출·주담대 동시 검토 가능. 서류는 카톡으로 받습니다.' },
-      { id:'jung-haeun', surname:'정', name:'정하은', bank:'shinhan',
-        org:'신한은행 삼성동지점 전속', regNo:'2024-서울-05210', avatarTone:'#FDE2D7',
-        rating:4.6, reviewCount:56, career:5, consultCount:612, avgRate:3.61,
-        respondMins:18, specs:['apt','youth'],
-        bio:'신한 전속. 첫 주담대·청년대출 친절히 안내합니다.' },
-      { id:'han-doyoung', surname:'한', name:'한도영', bank:'nh',
-        org:'NH농협 강남업무센터', regNo:'2021-서울-00318', avatarTone:'#E7F0DE',
-        rating:4.8, reviewCount:178, career:11, consultCount:2014, avgRate:3.49,
-        respondMins:9, specs:['apt','jeonse'],
-        bio:'실수요 주담대·전세 전문. 무리한 권유 X.' },
-      { id:'lee-jungmin', surname:'이', name:'이정민', bank:'woori',
-        org:'우리금융지주 역삼사무소', regNo:'2023-서울-08172', avatarTone:'#E7F0DE',
-        rating:4.7, reviewCount:89, career:7, consultCount:1102, avgRate:3.58,
-        respondMins:12, specs:['jeonse','youth'],
-        bio:'전세·청년 대출 전문. 평일 야간 상담 가능합니다.' },
-    ];
+    const CONSULTANTS = window.CONSULTANTS_DATA || [];
     const REVIEWS = {
       'kim-seoyoon': [
         { rating:5, date:'2026.05.04', body:'계약 3일 전에 갑자기 갈아타기 결심했는데 일정 다 맞춰주셨어요. 무리한 권유 없어서 좋았습니다.', tag:'갈아타기' },
@@ -740,12 +723,14 @@
 
     const $list = document.getElementById('clist');
     const $count = document.getElementById('count');
+    const $totalCount = document.getElementById('totalCount');
+    if ($totalCount) $totalCount.textContent = CONSULTANTS.length;
     function renderRows(sortKey) {
       const sorted = [...CONSULTANTS].sort((a, b) => {
         if (sortKey === 'respond') return a.respondMins - b.respondMins;
         if (sortKey === 'career') return b.career - a.career;
         return b.rating - a.rating;
-      });
+      }).slice(0, 5);
       $count.textContent = sorted.length;
       $list.innerHTML = sorted.map(c => `
         <div class="row" data-id="${c.id}">

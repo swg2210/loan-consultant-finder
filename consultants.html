@@ -477,6 +477,7 @@
   </aside>
 
   <script src="assets/properties.js"></script>
+  <script src="assets/consultants.js"></script>
   <script>
     // ─── 매물 설정 (URL ?id=) ─────────────────────────
     const params = new URLSearchParams(location.search);
@@ -506,51 +507,33 @@
       biz: '사업자대출', credit: '신용대출', youth: '청년·신혼',
     };
 
-    // ─── DATA (data.jsx 동기화) ───────────────────────────
-    const CONSULTANTS = [
-      { id:'kim-seoyoon', surname:'김', name:'김서윤', bank:'shinhan',
-        org:'신한부동산금융 강남센터', regNo:'2024-서울-04812', avatarTone:'#FDE2D7',
-        rating:4.9, reviewCount:127, career:12, consultCount:2340, avgRate:3.42,
-        respondMins:4, specs:['apt','swap','jeonse'],
-        bio:'주담대 12년, 갈아타기 전문. 매물 계약 일정에 맞춰 빠르게 진행합니다. 무리한 권유 없이 조건만 정확히 안내해요.',
-        complexHandled:7, priceRangeHandled:24, bankMatch:true,
-        matchScore:96, matchReason:'이 단지 7건 처리 · 신한 1순위 매칭' },
-      { id:'choi-yeonsu', surname:'최', name:'최연수', bank:'hana',
-        org:'하나금융 강남파이낸스센터', regNo:'2022-서울-02945', avatarTone:'#FFF1C7',
-        rating:4.9, reviewCount:312, career:15, consultCount:3580, avgRate:3.38,
-        respondMins:3, specs:['apt','swap','biz'],
-        bio:'15년 경력. 갈아타기·중도상환 시뮬레이션 강점. 첫 통화 5분 안에 가능 한도 안내해요.',
-        complexHandled:4, priceRangeHandled:31, bankMatch:false,
-        matchScore:89, matchReason:'15억대 31건 · 갈아타기 시뮬 강점' },
-      { id:'park-junhyuk', surname:'박', name:'박준혁', bank:'kb',
-        org:'KB부동산신탁 강남지점', regNo:'2024-서울-01234', avatarTone:'#CCEFD7',
-        rating:4.8, reviewCount:214, career:9, consultCount:1820, avgRate:3.51,
-        respondMins:7, specs:['apt','biz'],
-        bio:'KB 전속 9년. 사업자대출·주담대 동시 검토 가능. 서류는 카톡으로 받습니다.',
-        complexHandled:2, priceRangeHandled:18, bankMatch:false,
-        matchScore:78, matchReason:'15억대 18건 · 사업자 동시 검토' },
-      { id:'jung-haeun', surname:'정', name:'정하은', bank:'shinhan',
-        org:'신한은행 삼성동지점 전속', regNo:'2024-서울-05210', avatarTone:'#FDE2D7',
-        rating:4.6, reviewCount:56, career:5, consultCount:612, avgRate:3.61,
-        respondMins:18, specs:['apt','youth'],
-        bio:'신한 전속. 첫 주담대·청년대출 친절히 안내합니다.',
-        complexHandled:1, priceRangeHandled:6, bankMatch:true,
-        matchScore:71, matchReason:'신한 1순위 매칭 · 경력 5년' },
-      { id:'han-doyoung', surname:'한', name:'한도영', bank:'nh',
-        org:'NH농협 강남업무센터', regNo:'2021-서울-00318', avatarTone:'#E7F0DE',
-        rating:4.8, reviewCount:178, career:11, consultCount:2014, avgRate:3.49,
-        respondMins:9, specs:['apt','jeonse'],
-        bio:'실수요 주담대·전세 전문. 무리한 권유 X.',
-        complexHandled:0, priceRangeHandled:14, bankMatch:false,
-        matchScore:64, matchReason:'15억대 14건 · 실수요 전문' },
-      { id:'lee-jungmin', surname:'이', name:'이정민', bank:'woori',
-        org:'우리금융지주 역삼사무소', regNo:'2023-서울-08172', avatarTone:'#E7F0DE',
-        rating:4.7, reviewCount:89, career:7, consultCount:1102, avgRate:3.58,
-        respondMins:12, specs:['jeonse','youth'],
-        bio:'전세·청년 대출 전문. 평일 야간 상담 가능합니다.',
-        complexHandled:0, priceRangeHandled:3, bankMatch:false,
-        matchScore:42, matchReason:'전세 전문 — 매매와는 거리 있음' },
-    ];
+    // ─── DATA (assets/consultants.js 공유) ───────────────
+    // 기존 6명의 매물 매칭 데이터 — 신규 14명은 자동 생성
+    const MATCH_OVERRIDES = {
+      'kim-seoyoon':  { complexHandled:7, priceRangeHandled:24, bankMatch:true,  matchScore:96, matchReason:'이 단지 7건 처리 · 신한 1순위 매칭' },
+      'choi-yeonsu':  { complexHandled:4, priceRangeHandled:31, bankMatch:false, matchScore:89, matchReason:'15억대 31건 · 갈아타기 시뮬 강점' },
+      'park-junhyuk': { complexHandled:2, priceRangeHandled:18, bankMatch:false, matchScore:78, matchReason:'15억대 18건 · 사업자 동시 검토' },
+      'jung-haeun':   { complexHandled:1, priceRangeHandled:6,  bankMatch:true,  matchScore:71, matchReason:'신한 1순위 매칭 · 경력 5년' },
+      'han-doyoung':  { complexHandled:0, priceRangeHandled:14, bankMatch:false, matchScore:64, matchReason:'15억대 14건 · 실수요 전문' },
+      'lee-jungmin':  { complexHandled:0, priceRangeHandled:3,  bankMatch:false, matchScore:42, matchReason:'전세 전문 — 매매와는 거리 있음' },
+    };
+    function autoMatch(c) {
+      // 경력·평점 기반 가짜 매칭 점수 생성
+      const complex = Math.max(0, Math.floor(c.career / 3) - 1);
+      const priceRange = Math.floor(c.consultCount / 80);
+      const bankMatch = false;
+      const score = Math.min(85, Math.round(c.rating * 14 + c.career * 1.2));
+      const reason = c.specs.includes('swap')
+        ? `15억대 ${priceRange}건 · 갈아타기 가능`
+        : c.specs.includes('biz')
+          ? `15억대 ${priceRange}건 · 사업자 동시 검토`
+          : `15억대 ${priceRange}건 · 경력 ${c.career}년`;
+      return { complexHandled: complex, priceRangeHandled: priceRange, bankMatch, matchScore: score, matchReason: reason };
+    }
+    const CONSULTANTS = (window.CONSULTANTS_DATA || []).map(c => ({
+      ...c,
+      ...(MATCH_OVERRIDES[c.id] || autoMatch(c)),
+    }));
 
     const REVIEWS = {
       'kim-seoyoon': [
