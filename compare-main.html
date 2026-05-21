@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>주택담보대출 비교 — 네이버페이</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+  <style>
+    :root {
+      --primary: #00DE5A;
+      --primary-700: #00A847;
+      --primary-50: #E6FAEE;
+      --gray-50: #FAFAFA; --gray-100: #F3F4F6; --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB; --gray-400: #9CA3AF; --gray-500: #6B7280;
+      --gray-600: #4B5563; --gray-700: #374151; --gray-900: #1F2937;
+      --star: #F59E0B;
+      --radius-card: 14px; --radius-chip: 10px; --radius-btn: 12px;
+      --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased; color: var(--gray-900);
+      background: #EAEAEC; font-size: 15px; line-height: 1.5; font-weight: 500;
+    }
+    .shell { max-width: 390px; min-height: 100vh; margin: 0 auto;
+      background: #fff; position: relative; overflow-x: hidden; }
+
+    /* Topbar */
+    .topbar { display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px 8px; background: #fff; position: sticky; top: 0; z-index: 10; }
+    .topbar__brand { display: flex; align-items: center; gap: 8px; }
+    .brand__np { width: 26px; height: 26px; border-radius: 50%;
+      background: var(--primary); color: #fff; font-size: 17px; font-weight: 900;
+      display: inline-flex; align-items: center; justify-content: center;
+      letter-spacing: -0.6px; line-height: 1; }
+    .brand__title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; }
+    .topbar__right { display: flex; align-items: center; gap: 4px; color: var(--gray-700); font-size: 12.5px; font-weight: 700; }
+    .iconbtn { background: transparent; border: none; padding: 4px; cursor: pointer; border-radius: 8px; }
+
+    /* Tabs */
+    .tabbar { display: flex; padding: 0 8px; border-bottom: 1px solid var(--gray-200); background: #fff;
+      position: sticky; top: 48px; z-index: 9; }
+    .tab { flex: 1; padding: 14px 8px; text-align: center; font-size: 14px; font-weight: 700;
+      color: var(--gray-400); cursor: pointer; border: 0; background: transparent; font-family: inherit;
+      position: relative; }
+    .tab[aria-current="true"] { color: var(--gray-900); }
+    .tab[aria-current="true"]::after {
+      content: ''; position: absolute; left: 12px; right: 12px; bottom: -1px;
+      height: 2px; background: var(--gray-900); border-radius: 2px;
+    }
+
+    /* Hero cards */
+    .hero-cards { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+    .hero-card {
+      position: relative; padding: 18px 18px 16px;
+      border-radius: 16px; overflow: hidden;
+      cursor: pointer;
+    }
+    .hero-card--new {
+      background: linear-gradient(135deg, #00DE5A 0%, #00A847 100%);
+      color: #fff;
+    }
+    .hero-card--swap {
+      background: #fff; border: 1px solid var(--gray-200);
+    }
+    .hero-card__badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(255,255,255,0.25); color: #fff;
+      font-size: 10.5px; font-weight: 800; letter-spacing: 0.3px;
+      padding: 3px 7px; border-radius: 5px; margin-bottom: 8px;
+    }
+    .hero-card__title { font-size: 19px; font-weight: 800; letter-spacing: -0.4px; margin: 0 0 4px; }
+    .hero-card__sub { font-size: 12.5px; font-weight: 600; opacity: 0.85; margin: 0 0 10px; }
+    .hero-card--swap .hero-card__sub { color: var(--gray-500); opacity: 1; }
+    .hero-card__rate {
+      display: inline-flex; align-items: baseline; gap: 4px;
+      font-size: 13px; font-weight: 700;
+    }
+    .hero-card__rate strong { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; font-feature-settings: "tnum"; }
+    .hero-card--swap .hero-card__rate { color: var(--gray-900); }
+    .hero-card__chev {
+      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+      opacity: 0.7;
+    }
+    .hero-card__alert {
+      margin-top: 10px; display: inline-flex; align-items: center; gap: 6px;
+      background: var(--primary-50); color: var(--primary-700);
+      padding: 6px 10px; border-radius: 8px;
+      font-size: 11.5px; font-weight: 700;
+    }
+    .hero-card--swap .hero-card__alert { background: var(--gray-100); color: var(--gray-700); }
+
+    /* Section */
+    .section { padding: 0 16px; margin-top: 24px; }
+    .section__title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; margin: 0 0 12px; }
+    .section__title em { color: var(--primary-700); font-style: normal; }
+
+    /* Consultant strip (NEW promotion area) */
+    .consult-strip {
+      margin: 24px 16px 0;
+      padding: 18px 16px 16px;
+      background: linear-gradient(180deg, #F4FBF6 0%, #fff 70%);
+      border: 1px solid var(--primary-50);
+      border-radius: var(--radius-card);
+    }
+    .consult-strip__head {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+    }
+    .consult-strip__title { font-size: 15px; font-weight: 800; letter-spacing: -0.3px; }
+    .consult-strip__title em { color: var(--primary-700); font-style: normal; }
+    .consult-strip__more { font-size: 12px; font-weight: 700; color: var(--gray-500); text-decoration: none; }
+    .consult-strip__more::after { content: ' ›'; }
+    .consult-strip__sub {
+      font-size: 12.5px; color: var(--gray-600); font-weight: 500; margin: 0 0 12px; line-height: 1.5;
+    }
+    .consult-row {
+      display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px;
+      scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    }
+    .consult-row::-webkit-scrollbar { display: none; }
+    .consult-mini {
+      flex-shrink: 0; width: 124px;
+      background: #fff; border: 1px solid var(--gray-200); border-radius: 12px;
+      padding: 12px 10px; text-decoration: none; color: inherit;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      cursor: pointer; transition: transform 150ms var(--ease-standard);
+    }
+    .consult-mini:active { transform: scale(0.97); }
+    .mini-avatar { position: relative; width: 48px; height: 48px; }
+    .mini-avatar__img {
+      width: 100%; height: 100%; border-radius: 50%; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700;
+    }
+    .mini-avatar__img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mini-avatar__bank {
+      position: absolute; right: -2px; bottom: -2px;
+      width: 20px; height: 20px; border-radius: 50%; background: #fff; padding: 1.5px;
+    }
+    .mini-avatar__bank > span {
+      width: 100%; height: 100%; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 8.5px; font-weight: 800;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
+    }
+    .mini-name { font-size: 13px; font-weight: 800; letter-spacing: -0.2px; margin-top: 2px; }
+    .mini-org { font-size: 10.5px; color: var(--gray-500); font-weight: 600; text-align: center;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .mini-rate {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: 11.5px; font-weight: 700; color: var(--gray-900);
+    }
+    .mini-rate svg { color: var(--star); }
+    .mini-rate small { color: var(--gray-400); font-weight: 500; }
+
+    /* Benefit list */
+    .benefits {
+      margin: 0 16px; padding: 18px;
+      background: var(--gray-50); border-radius: var(--radius-card);
+    }
+    .benefits__title { font-size: 15px; font-weight: 800; margin: 0 0 12px; letter-spacing: -0.3px; }
+    .benefit-item { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; }
+    .benefit-item__icon {
+      width: 22px; height: 22px; border-radius: 50%; background: var(--primary);
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0; color: #fff; font-size: 12px; font-weight: 900;
+    }
+    .benefit-item__text { font-size: 13.5px; font-weight: 600; color: var(--gray-700); line-height: 1.55; }
+    .benefit-item__text b { color: var(--gray-900); }
+
+    /* Bank grid */
+    .bank-toggle { display: flex; gap: 6px; margin: 16px 16px 12px; padding: 4px;
+      background: var(--gray-100); border-radius: 10px; }
+    .bank-toggle__btn {
+      flex: 1; padding: 9px; border-radius: 8px; border: 0; background: transparent;
+      font-size: 12.5px; font-weight: 700; color: var(--gray-500); cursor: pointer; font-family: inherit;
+    }
+    .bank-toggle__btn[aria-pressed="true"] { background: #fff; color: var(--gray-900);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+
+    .bank-grid {
+      margin: 0 16px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+    }
+    .bank-cell {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 12px; background: #fff; border: 1px solid var(--gray-200);
+      border-radius: 12px;
+    }
+    .bank-cell__logo {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800;
+    }
+    .bank-cell__name { font-size: 13px; font-weight: 700; }
+
+    /* Sub box */
+    .sub-options {
+      margin: 24px 16px 0; padding: 16px;
+      background: var(--gray-50); border-radius: var(--radius-card);
+    }
+    .sub-options__title { font-size: 14px; font-weight: 800; margin: 0 0 10px; }
+    .sub-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px; background: #fff; border-radius: 10px;
+      text-decoration: none; color: inherit; cursor: pointer;
+      margin-bottom: 6px;
+    }
+    .sub-row:last-child { margin-bottom: 0; }
+    .sub-row__icon { font-size: 22px; flex-shrink: 0; }
+    .sub-row__title { font-size: 13.5px; font-weight: 700; }
+    .sub-row__sub { font-size: 11.5px; color: var(--gray-500); font-weight: 500; }
+    .sub-row__chev { margin-left: auto; color: var(--gray-300); }
+
+    .notice {
+      margin: 24px 16px 0; padding: 16px; background: var(--gray-50);
+      border-radius: 10px; font-size: 11px; color: var(--gray-500);
+      font-weight: 500; line-height: 1.7;
+    }
+    .bottom-pad { height: 48px; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar__brand">
+        <span class="brand__np">N</span>
+        <span class="brand__title">대출비교</span>
+      </div>
+      <div class="topbar__right">
+        내 신용점수 <strong style="color: var(--primary-700); margin-left: 4px;">878</strong>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="tabbar" role="tablist">
+      <button class="tab" role="tab">신용</button>
+      <button class="tab" role="tab" aria-current="true">주택담보</button>
+      <button class="tab" role="tab">전월세</button>
+      <button class="tab" role="tab">자동차</button>
+    </nav>
+
+    <!-- Hero cards -->
+    <div class="hero-cards">
+      <div class="hero-card hero-card--new">
+        <span class="hero-card__badge">NEW · 사업자도 가능</span>
+        <h2 class="hero-card__title">대출 새로받기</h2>
+        <p class="hero-card__sub">집을 살 때, 사업자금이 필요할 때</p>
+        <div class="hero-card__rate">최저 <strong>2.83%</strong></div>
+        <svg class="hero-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="hero-card hero-card--swap">
+        <h2 class="hero-card__title">대출 갈아타기</h2>
+        <p class="hero-card__sub">더 낮은 금리로 갈아탈 수 있어요</p>
+        <div class="hero-card__rate">최저 <strong>3.14%</strong></div>
+        <div class="hero-card__alert">
+          ⏰ 5시간 45분 후 갈아타기 가능 알림
+        </div>
+        <svg class="hero-card__chev" width="20" height="20" viewBox="0 0 24 24" fill="none" style="color: var(--gray-400);"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+    <!-- 상담사 미리보기 (NEW) -->
+    <section class="consult-strip">
+      <div class="consult-strip__head">
+        <div class="consult-strip__title"><em>등록 모집인</em>이 직접 도와드려요</div>
+        <a class="consult-strip__more" href="index.html">전체보기</a>
+      </div>
+      <p class="consult-strip__sub">
+        한도 협의 · 서류 대행이 필요하면 단지 근처 모집인을 찾아보세요. 1사 1전속 등록 전문가만 노출됩니다.
+      </p>
+      <div class="consult-row" id="consultRow"></div>
+    </section>
+
+    <!-- 이런 점이 좋아요 -->
+    <section class="benefits" style="margin-top: 24px;">
+      <h2 class="benefits__title">이런 점이 좋아요</h2>
+      <div class="benefit-item">
+        <span class="benefit-item__icon">✓</span>
+        <span class="benefit-item__text"><b>18개 금융사 한 번에 비교</b> — 한 번 입력으로 최저금리·최대한도 확인</span>
+      </div>
+      <div class="benefit-item">
+        <span class="benefit-item__icon">✓</span>
+        <span class="benefit-item__text"><b>신용점수 영향 없음</b> — 비교 조회는 점수에 영향을 주지 않아요</span>
+      </div>
+      <div class="benefit-item">
+        <span class="benefit-item__icon">✓</span>
+        <span class="benefit-item__text"><b>비대면 신청까지 한 번에</b> — 마음에 드는 상품은 바로 신청 가능</span>
+      </div>
+    </section>
+
+    <!-- 18개 금융사 -->
+    <div class="section" style="margin-top: 24px;">
+      <h2 class="section__title">18개 금융사 비교</h2>
+    </div>
+    <div class="bank-toggle">
+      <button class="bank-toggle__btn" aria-pressed="true">새로받기</button>
+      <button class="bank-toggle__btn" aria-pressed="false">갈아타기</button>
+    </div>
+    <div class="bank-grid">
+      <div class="bank-cell"><div class="bank-cell__logo" style="background:#0046FF;color:#fff">신한</div><div class="bank-cell__name">신한은행</div></div>
+      <div class="bank-cell"><div class="bank-cell__logo" style="background:#008C5A;color:#fff">하나</div><div class="bank-cell__name">하나은행</div></div>
+      <div class="bank-cell"><div class="bank-cell__logo" style="background:#0067AC;color:#fff">우리</div><div class="bank-cell__name">우리은행</div></div>
+      <div class="bank-cell"><div class="bank-cell__logo" style="background:#005EB8;color:#fff">SC</div><div class="bank-cell__name">SC제일은행</div></div>
+    </div>
+
+    <!-- 원하는 대출이 없다면 -->
+    <section class="sub-options">
+      <h3 class="sub-options__title">원하는 대출이 없다면?</h3>
+      <a class="sub-row" href="#">
+        <span class="sub-row__icon">💳</span>
+        <div>
+          <div class="sub-row__title">신용대출 비교</div>
+          <div class="sub-row__sub">한도 부족 시 추가 활용</div>
+        </div>
+        <svg class="sub-row__chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </a>
+      <a class="sub-row" href="#">
+        <span class="sub-row__icon">🏠</span>
+        <div>
+          <div class="sub-row__title">전세자금대출 보증상품</div>
+          <div class="sub-row__sub">HUG·HF 보증 비교</div>
+        </div>
+        <svg class="sub-row__chev" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </a>
+    </section>
+
+    <!-- 유의사항 -->
+    <div class="notice">
+      <strong style="color: var(--gray-700);">유의사항</strong><br>
+      ·   본 서비스는 네이버페이가 제휴 금융기관의 대출상품 정보를 비교 안내하는 서비스입니다.<br>
+      ·   최종 금리·한도는 각 금융사 심사 결과에 따라 다를 수 있어요.<br>
+      ·   비교 조회는 신용점수에 영향을 주지 않습니다.<br>
+      ·   대출 실행 전 약관과 상환계획을 반드시 확인하세요.
+    </div>
+
+    <div class="bottom-pad"></div>
+  </div>
+
+  <script src="assets/consultants.js"></script>
+  <script>
+    // bank tone
+    const BANK = {
+      shinhan: { color:'#0046FF', label:'신한' },
+      kb:      { color:'#FFB800', label:'KB' },
+      hana:    { color:'#008C5A', label:'하나' },
+      woori:   { color:'#0067AC', label:'우리' },
+      nh:      { color:'#36A537', label:'NH' },
+      kakao:   { color:'#FFE812', label:'kakao', textColor:'#1F2937' },
+    };
+    function bankBadge(bank) {
+      const b = BANK[bank] || { color:'#999', label:'·' };
+      const tc = b.textColor || '#fff';
+      return `<span style="background:${b.color};color:${tc};">${b.label.slice(0,3)}</span>`;
+    }
+    const ALL = window.CONSULTANTS_DATA || [];
+    const TOP = [...ALL].sort((a,b)=>b.rating - a.rating || b.reviewCount - a.reviewCount).slice(0,8);
+    const row = document.getElementById('consultRow');
+    row.innerHTML = TOP.map(c => `
+      <a class="consult-mini" href="index.html#${c.id}">
+        <div class="mini-avatar">
+          <div class="mini-avatar__img" style="background:${c.avatarTone};">
+            <img src="assets/consultants/${c.id}.png" alt="${c.name}" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'${c.surname}'}))">
+          </div>
+          <div class="mini-avatar__bank">${bankBadge(c.bank)}</div>
+        </div>
+        <div class="mini-name">${c.name}</div>
+        <div class="mini-org">${c.org.split(' ').slice(0,2).join(' ')}</div>
+        <div class="mini-rate">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          ${c.rating} <small>(${c.reviewCount})</small>
+        </div>
+      </a>
+    `).join('');
+  </script>
+</body>
+</html>
