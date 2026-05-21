@@ -205,10 +205,29 @@ html, body {
   }
 
   // iframe을 콘텐츠 높이로 맞추기 (내부 스크롤 제거)
+  // 내부 페이지의 min-height:100vh 를 무력화해서 콘텐츠 실제 높이를 측정
+  function injectHeightFix(doc) {
+    if (!doc || doc.__heightFixed) return;
+    doc.__heightFixed = true;
+    const style = doc.createElement('style');
+    style.textContent = `
+      html, body { min-height: 0 !important; height: auto !important; }
+      .page, .app, .container, [class*="wrap"], [class*="page"] {
+        min-height: 0 !important;
+      }
+    `;
+    doc.head.appendChild(style);
+  }
+
   function resizeIframeToContent() {
     try {
       const doc = frame.contentDocument;
       if (!doc) return;
+      injectHeightFix(doc);
+      // 측정 전 iframe 높이를 0으로 줄여서 100vh 영향 제거 후 실제 콘텐츠 높이 측정
+      frame.style.height = '0px';
+      // 강제 리플로우
+      void doc.documentElement.offsetHeight;
       const h = Math.max(
         doc.documentElement.scrollHeight,
         doc.body ? doc.body.scrollHeight : 0
