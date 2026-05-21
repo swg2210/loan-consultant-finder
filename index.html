@@ -119,7 +119,12 @@
       padding: 0 16px 4px;
       scrollbar-width: none;
       -webkit-overflow-scrolling: touch;
+      touch-action: pan-x;
+      cursor: grab;
+      user-select: none;
     }
+    .prop-scroller.dragging { cursor: grabbing; }
+    .prop-scroller.dragging a { pointer-events: none; }
     .prop-scroller::after {
       content: ''; flex: 0 0 4px;
     }
@@ -379,7 +384,7 @@
       <h2 class="section-title">최근 조회한 매물</h2>
       <a class="link-more" href="#">전체 ›</a>
     </div>
-    <div class="prop-scroller">
+    <div class="prop-scroller" id="propScroller">
       <a class="prop-card" href="property-detail.html?id=jaie">
         <img class="prop-card__thumb" src="assets/photos/01.jpg" alt="청담자이" onerror="this.style.display='none'">
         <div class="prop-card__body">
@@ -529,6 +534,41 @@
   </aside>
 
   <script>
+    // Mouse drag-to-scroll for property scroller (desktop)
+    (function () {
+      const el = document.getElementById('propScroller');
+      if (!el) return;
+      let isDown = false, startX = 0, startScroll = 0, moved = 0;
+      el.addEventListener('mousedown', (e) => {
+        isDown = true; moved = 0;
+        startX = e.pageX; startScroll = el.scrollLeft;
+        el.classList.add('dragging');
+      });
+      window.addEventListener('mouseup', () => {
+        if (!isDown) return;
+        isDown = false;
+        // delay class removal so click handler can be cancelled if dragged
+        setTimeout(() => el.classList.remove('dragging'), 0);
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        const dx = e.pageX - startX;
+        moved = Math.max(moved, Math.abs(dx));
+        el.scrollLeft = startScroll - dx;
+      });
+      // Prevent click navigation when dragged
+      el.addEventListener('click', (e) => {
+        if (moved > 5) { e.preventDefault(); e.stopPropagation(); }
+      }, true);
+      // Horizontal scroll via vertical wheel
+      el.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          el.scrollLeft += e.deltaY;
+          e.preventDefault();
+        }
+      }, { passive: false });
+    })();
+
     const BANKS = {
       shinhan: { name: '신한',    short: '신한', color: '#0046FF' },
       kb:      { name: 'KB국민',  short: 'KB',   color: '#FFBC00' },
