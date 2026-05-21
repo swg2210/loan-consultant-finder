@@ -116,6 +116,10 @@
     .consultant-cta:active{transform:scale(0.98);}
     .consultant-cta__icon{width:48px; height:48px; border-radius:14px; background:#fff; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 8px rgba(49,130,246,.18);}
     .consultant-cta__icon svg{width:28px; height:28px; color:var(--primary);}
+    .consultant-cta__avatars{display:flex; flex-shrink:0; padding-right:8px;}
+    .cta-avatar{width:34px; height:34px; border-radius:50%; border:2px solid #fff; display:inline-flex; align-items:center; justify-content:center; color:#fff; font-weight:800; font-size:13px; margin-right:-10px; box-shadow:0 1px 3px rgba(0,0,0,.10); letter-spacing:-0.3px;}
+    .cta-avatar:last-child{margin-right:0;}
+    .cta-avatar--more{background:#fff; color:var(--gray-700); font-size:11px; border:2px solid #fff; box-shadow:0 1px 3px rgba(0,0,0,.10);}
     .consultant-cta__body{flex:1; min-width:0;}
     .consultant-cta__title{font-size:15px; font-weight:800; letter-spacing:-0.2px;}
     .consultant-cta__sub{margin-top:2px; font-size:12.5px; color:var(--gray-600); font-weight:600;}
@@ -259,13 +263,11 @@
 
     <!-- ★ 상담사 찾기 CTA -->
     <a href="index.html" class="consultant-cta">
-      <div class="consultant-cta__icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <circle cx="9" cy="8" r="3.5"/>
-          <path d="M3 20c0-3 2.5-5.5 6-5.5s6 2.5 6 5.5" stroke-linecap="round"/>
-          <circle cx="17" cy="11" r="2.5"/>
-          <path d="M14 18c0-2 1.5-3.5 3-3.5s3 1.5 3 3.5" stroke-linecap="round"/>
-        </svg>
+      <div class="consultant-cta__avatars">
+        <span class="cta-avatar" style="background:linear-gradient(135deg,#7AD89A,#03C75A)">김</span>
+        <span class="cta-avatar" style="background:linear-gradient(135deg,#FFD089,#FF9D2E)">최</span>
+        <span class="cta-avatar" style="background:linear-gradient(135deg,#B8C7FF,#5874FF)">박</span>
+        <span class="cta-avatar cta-avatar--more">+3</span>
       </div>
       <div class="consultant-cta__body">
         <div class="consultant-cta__title">이 매물에 맞는 대출 상담사 찾기</div>
