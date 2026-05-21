@@ -1,0 +1,58 @@
+/* Figma design tokens — N pay 대출비교
+ * Source: Figma file JjBN1j67hIKGNiLs6Ki5dq, nodes 3105:20855 (main), 3108:21349 (result)
+ */
+:root {
+  /* Primary */
+  --primary-green: #09AB49;          /* main page accent */
+  --primary-green-result: #09AA5C;   /* result page accent (slightly darker) */
+  --primary-red: #F73631;
+  --red-100: #FFF3F4;
+  --blue-500: #0A7DF3;
+  --blue-200: #E6F2FB;
+  --teal-500: #0DA4AC;
+  --darkgray-200: #909AAB;
+  --darkgray-300: #718095;
+
+  /* GrayScale */
+  --white: #FFFFFF;
+  --gray-100: #F6F8FA;
+  --gray-150: #F3F5F7;
+  --gray-200: #EDEFF2;
+  --gray-250: #DCDEE0;
+  --gray-500: #AAAAAC;
+  --gray-600: #929294;
+  --gray-700: #767678;
+  --gray-800: #303038;
+  --gray-800b: #404048;  /* body text */
+  --gray-900: #1E1E23;
+  --black: #000000;
+
+  /* Shadows */
+  --shadow-small-5: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-large-5: 0 4px 16px rgba(0, 0, 0, 0.05);
+
+  /* Fonts */
+  --font-ko: "Apple SD Gothic Neo", "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-en: "SF Pro Text", "SF Pro Display", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-base: "Apple SD Gothic Neo", "SF Pro Text", "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Type tokens (ko / en pairs preserve Figma metrics) */
+.t-22-bold  { font-size: 22px; font-weight: 700; line-height: 28px; letter-spacing: -0.5px; }
+.t-20-bold  { font-size: 20px; font-weight: 700; line-height: 26px; letter-spacing: -0.5px; }
+.t-18-bold  { font-size: 18px; font-weight: 700; line-height: 24px; letter-spacing: -0.5px; }
+.t-17-bold  { font-size: 17px; font-weight: 700; line-height: 23px; letter-spacing: -0.3px; }
+.t-16-bold  { font-size: 16px; font-weight: 700; line-height: 22px; letter-spacing: -0.3px; }
+.t-16-med   { font-size: 16px; font-weight: 500; line-height: 22px; letter-spacing: -0.3px; }
+.t-15-bold  { font-size: 15px; font-weight: 700; line-height: 21px; letter-spacing: -0.3px; }
+.t-15-med   { font-size: 15px; font-weight: 500; line-height: 21px; letter-spacing: -0.3px; }
+.t-14-bold  { font-size: 14px; font-weight: 700; line-height: 20px; letter-spacing: -0.3px; }
+.t-14-med   { font-size: 14px; font-weight: 500; line-height: 20px; letter-spacing: -0.3px; }
+.t-14-reg   { font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: -0.3px; }
+.t-13-bold  { font-size: 13px; font-weight: 700; line-height: 19px; letter-spacing: -0.3px; }
+.t-13-med   { font-size: 13px; font-weight: 500; line-height: 19px; letter-spacing: -0.3px; }
+.t-11-bold  { font-size: 11px; font-weight: 700; line-height: 17px; letter-spacing: -0.3px; }
+.t-11-med   { font-size: 11px; font-weight: 500; line-height: 17px; letter-spacing: -0.3px; }
+
+/* Numeric (uses SF Pro Text) */
+.num { font-family: var(--font-en); font-weight: 700; }
