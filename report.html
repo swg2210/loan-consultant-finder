@@ -174,7 +174,7 @@ html, body {
 <!-- 중앙 스테이지 -->
 <div class="stage">
   <div class="frame">
-    <iframe id="previewFrame" src="index.html" title="대출모집인 찾기"></iframe>
+    <iframe id="previewFrame" src="index.html" title="대출모집인 찾기" scrolling="no"></iframe>
     <div class="overlay" id="overlay"></div>
   </div>
 </div>
@@ -209,6 +209,9 @@ html, body {
     try {
       const doc = frame.contentDocument;
       if (!doc) return;
+      // 내부 html/body 자체 스크롤도 완전 제거
+      doc.documentElement.style.overflow = 'hidden';
+      if (doc.body) doc.body.style.overflow = 'hidden';
       const h = Math.max(
         doc.documentElement.scrollHeight,
         doc.body ? doc.body.scrollHeight : 0
