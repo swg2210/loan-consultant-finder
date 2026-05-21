@@ -15,31 +15,24 @@ html, body {
 }
 .page { width: 375px; margin: 0 auto; background: var(--white); min-height: 100vh; }
 
-/* Status bar */
-.statusbar {
-  height: 44px; display: flex; align-items: center; justify-content: space-between;
-  padding: 0 21px; font-family: var(--font-en); font-weight: 600; font-size: 14px;
-  color: var(--black); letter-spacing: -0.28px;
+/* Topbar — index.html과 통일 */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px 8px; background: var(--white);
+  position: sticky; top: 0; z-index: 10;
 }
-.statusbar__icons { display: flex; gap: 5px; align-items: center; font-size: 12px; }
-
-/* HeaderBrandDepth */
-.header {
-  height: 56px; display: flex; align-items: center; padding: 0 20px;
-  background: var(--white); position: relative;
+.topbar__brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.brand__np {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #00DE5A; color: var(--white);
+  font-size: 17px; font-weight: 900;
+  display: inline-flex; align-items: center; justify-content: center;
+  letter-spacing: -0.6px; line-height: 1;
 }
-.header__npay {
-  display: flex; align-items: center; gap: 0;
-}
-.npay-logo {
-  width: 28px; height: 24px; display: inline-flex; align-items: center; justify-content: center;
-  background: var(--primary-green); color: var(--white); font-family: var(--font-en);
-  font-weight: 800; font-size: 16px; border-radius: 6px; letter-spacing: -1px;
-}
-.header__divider { width: 1px; height: 14px; background: var(--gray-250); margin: 0 12px; }
-.header__title { font-weight: 700; font-size: 18px; line-height: 22px; color: var(--gray-900); letter-spacing: -0.3px; }
-.header__action {
-  margin-left: auto; color: var(--primary-green); font-weight: 500; font-size: 15px; letter-spacing: -0.3px;
+.brand__title { font-size: 16px; font-weight: 800; letter-spacing: -0.3px; color: var(--gray-900); }
+.topbar__action {
+  background: transparent; border: 0; padding: 4px 8px; cursor: pointer;
+  color: #00A847; font-weight: 700; font-size: 14px; letter-spacing: -0.3px;
 }
 
 /* Tab */
@@ -268,20 +261,13 @@ html, body {
 </head>
 <body>
 <div class="page">
-  <!-- Status bar -->
-  <div class="statusbar">
-    <span>9:41</span>
-    <div class="statusbar__icons"><span>•••</span><span>📶</span><span>🔋</span></div>
-  </div>
-
-  <!-- Header -->
-  <header class="header">
-    <div class="header__npay">
-      <span class="npay-logo">N</span>
+  <!-- Topbar -->
+  <header class="topbar">
+    <div class="topbar__brand">
+      <span class="brand__np">N</span>
+      <span class="brand__title">대출비교</span>
     </div>
-    <div class="header__divider"></div>
-    <div class="header__title">대출비교</div>
-    <a href="#" class="header__action">신용점수</a>
+    <a href="#" class="topbar__action">신용점수</a>
   </header>
 
   <!-- Tab -->
