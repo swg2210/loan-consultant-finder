@@ -65,7 +65,7 @@
     .iconbtn:active { background: var(--gray-100); }
 
     /* Hero */
-    .hero { padding: 18px 20px 8px; }
+    .hero { padding: 18px 16px 8px; }
     .hero__title {
       font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
       color: var(--gray-900); line-height: 1.35; margin: 0 0 6px;
@@ -100,7 +100,7 @@
     /* Section title */
     .section-title-row {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 24px 20px 12px;
+      padding: 24px 16px 12px;
     }
     .section-title {
       font-size: 17px; font-weight: 800; letter-spacing: -0.3px;
@@ -115,7 +115,7 @@
     /* Property scroller */
     .prop-scroller {
       display: flex; gap: 10px;
-      overflow-x: auto; padding: 0 20px 4px;
+      overflow-x: auto; padding: 0 16px 4px;
       scrollbar-width: none; scroll-snap-type: x mandatory;
     }
     .prop-scroller::-webkit-scrollbar { display: none; }
@@ -372,11 +372,11 @@
 
     <!-- 인기 단지 가로 스크롤 -->
     <div class="section-title-row">
-      <h2 class="section-title">둘러볼 수 있는 매물</h2>
+      <h2 class="section-title">최근 조회한 매물</h2>
       <a class="link-more" href="#">전체 ›</a>
     </div>
     <div class="prop-scroller">
-      <a class="prop-card" href="property-detail.html">
+      <a class="prop-card" href="property-detail.html?id=jaie">
         <img class="prop-card__thumb" src="assets/photos/01.jpg" alt="청담자이" onerror="this.style.display='none'">
         <div class="prop-card__body">
           <div class="prop-card__name">청담자이</div>
@@ -384,28 +384,20 @@
           <div class="prop-card__price">매매 53억</div>
         </div>
       </a>
-      <a class="prop-card" href="property-detail.html">
-        <img class="prop-card__thumb" src="assets/photos/02.jpg" alt="래미안 대치" onerror="this.style.display='none'">
+      <a class="prop-card" href="property-detail.html?id=lwell">
+        <img class="prop-card__thumb" src="assets/photos/청담르엘01.jpg" alt="청담르엘" onerror="this.style.display='none'">
         <div class="prop-card__body">
-          <div class="prop-card__name">래미안 대치팰리스</div>
-          <div class="prop-card__meta">강남구 대치동 · 84㎡</div>
+          <div class="prop-card__name">청담르엘</div>
+          <div class="prop-card__meta">강남구 청담동 · 115B㎡</div>
+          <div class="prop-card__price">매매 68억</div>
+        </div>
+      </a>
+      <a class="prop-card" href="property-detail.html?id=ipark">
+        <img class="prop-card__thumb" src="assets/photos/청담 아이파크(01).jpg" alt="청담 아이파크" onerror="this.style.display='none'">
+        <div class="prop-card__body">
+          <div class="prop-card__name">청담 아이파크</div>
+          <div class="prop-card__meta">강남구 청담동 · 137㎡</div>
           <div class="prop-card__price">매매 32억</div>
-        </div>
-      </a>
-      <a class="prop-card" href="property-detail.html">
-        <img class="prop-card__thumb" src="assets/photos/03.jpg" alt="반포자이" onerror="this.style.display='none'">
-        <div class="prop-card__body">
-          <div class="prop-card__name">반포자이</div>
-          <div class="prop-card__meta">서초구 반포동 · 132㎡</div>
-          <div class="prop-card__price">매매 45억</div>
-        </div>
-      </a>
-      <a class="prop-card" href="property-detail.html">
-        <img class="prop-card__thumb" src="assets/photos/01.jpg" alt="잠실엘스" onerror="this.style.display='none'">
-        <div class="prop-card__body">
-          <div class="prop-card__name">잠실엘스</div>
-          <div class="prop-card__meta">송파구 잠실동 · 119㎡</div>
-          <div class="prop-card__price">매매 28억</div>
         </div>
       </a>
     </div>

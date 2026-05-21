@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>대출 상담사 찾기 — 미캘란쉐르빌</title>
+  <title id="pageTitle">대출 상담사 찾기</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
   <style>
     /* ─────────────────────────────────────────────────────
@@ -407,7 +407,7 @@
 
     <!-- Top bar -->
     <header class="topbar">
-      <button class="iconbtn" aria-label="뒤로" onclick="location.href='property-detail.html'">
+      <button class="iconbtn" id="backBtn" aria-label="뒤로">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
           <path d="M15 18l-6-6 6-6" stroke="#1F2937" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
@@ -422,15 +422,15 @@
     <!-- Property hero -->
     <article class="property" aria-label="검색한 매물">
       <div class="property__thumb">
-        <img src="assets/photos/01.jpg" alt="청담자이 단지" onerror="this.style.display='none'">
+        <img id="propThumb" src="" alt="" onerror="this.style.display='none'">
       </div>
       <div class="property__body">
         <div class="property__info">
-          <div class="property__name">청담자이</div>
-          <div class="property__unit">104동 · 전용89B · 34/35층</div>
-          <div class="property__price">53억<span class="suffix"></span></div>
+          <div class="property__name" id="propName">—</div>
+          <div class="property__unit" id="propUnit">—</div>
+          <div class="property__price"><span id="propPrice">—</span><span class="suffix"></span></div>
         </div>
-        <button class="property__more">다른 매물 둘러보기 ›</button>
+        <button class="property__more" onclick="location.href='index.html'">다른 매물 둘러보기 ›</button>
       </div>
     </article>
 
@@ -476,6 +476,20 @@
     <div id="sheetBody"></div>
   </aside>
 
+  <script src="assets/properties.js"></script>
+  <script>
+    // ─── 매물 설정 (URL ?id=) ─────────────────────────
+    const params = new URLSearchParams(location.search);
+    const propId = params.get('id') || 'jaie';
+    const P = (window.PROPERTIES && window.PROPERTIES[propId]) || window.PROPERTIES.jaie;
+    document.getElementById('pageTitle').textContent = `대출 상담사 찾기 — ${P.nameShort}`;
+    document.getElementById('propThumb').src = `assets/photos/${P.photos[0]}`;
+    document.getElementById('propThumb').alt = P.nameShort;
+    document.getElementById('propName').textContent = P.nameShort;
+    document.getElementById('propUnit').textContent = P.listingShort;
+    document.getElementById('propPrice').textContent = P.listingPriceShort;
+    document.getElementById('backBtn').onclick = () => location.href = `property-detail.html?id=${propId}`;
+  </script>
   <script>
     // ─── BANKS ─────────────────────────────────────────────
     const BANKS = {
@@ -565,7 +579,7 @@
       if (s >= 50) return '보통';
       return '낮음';
     }
-    const MATCH_COLORS = ['#DCE9FE', '#87B4FB', '#3182F6', '#1B4FA0'];
+    const MATCH_COLORS = ['#CCEFD7', '#7AD89A', '#00DE5A', '#00A847'];
 
     function dotsHTML(score) {
       const lv = matchLevel(score);
