@@ -42,7 +42,7 @@
     }
     .shell {
       max-width: 390px; min-height: 100vh; margin: 0 auto;
-      background: #fff; position: relative; overflow: hidden;
+      background: #fff; position: relative; overflow-x: hidden;
     }
 
     /* Topbar */
@@ -115,16 +115,20 @@
     /* Property scroller */
     .prop-scroller {
       display: flex; gap: 10px;
-      overflow-x: auto; padding: 0 16px 4px;
-      scrollbar-width: none; scroll-snap-type: x mandatory;
+      overflow-x: auto; overflow-y: hidden;
+      padding: 0 16px 4px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+    .prop-scroller::after {
+      content: ''; flex: 0 0 4px;
     }
     .prop-scroller::-webkit-scrollbar { display: none; }
     .prop-card {
-      flex-shrink: 0; width: 200px;
+      flex-shrink: 0; width: 180px;
       background: #fff; border: 1px solid var(--gray-200);
       border-radius: var(--radius-card); overflow: hidden;
       text-decoration: none; color: inherit;
-      scroll-snap-align: start;
       transition: transform 150ms var(--ease-standard);
     }
     .prop-card:active { transform: scale(0.98); }
