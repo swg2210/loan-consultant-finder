@@ -443,14 +443,25 @@ html, body {
   });
 
   // 스테이지/프레임 너비를 시나리오에 맞게 변경 (모바일 390, PC 1280 등)
+  // 좌측 고정 패널(0~260px) 영역을 피해서 배치
   function applyStageWidth(w) {
     const stage = document.querySelector('.stage');
     const fr    = document.querySelector('.frame');
     if (!stage || !fr) return;
-    const winW = window.innerWidth - 360; // 좌측 패널 영역 제외
-    const actual = Math.min(w, Math.max(390, winW));
+    const PANEL_RESERVE = 260; // 좌측 패널 영역
+    const available = Math.max(390, window.innerWidth - PANEL_RESERVE - 24);
+    const actual = Math.min(w, available);
     stage.style.width = actual + 'px';
     fr.style.width = actual + 'px';
+    if (w > 390) {
+      // PC 모드: 좌측 패널을 피해 우측 영역에 배치
+      stage.style.marginLeft = PANEL_RESERVE + 'px';
+      stage.style.marginRight = 'auto';
+    } else {
+      // 모바일 모드: 중앙 정렬
+      stage.style.marginLeft = 'auto';
+      stage.style.marginRight = 'auto';
+    }
   }
 
   frame.addEventListener('load', () => {
