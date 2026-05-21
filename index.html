@@ -755,12 +755,17 @@
             <div class="sheet__name">${c.name}</div>
             <div class="sheet__org">${c.org}</div>
             <div class="sheet__regno">등록번호 ${c.regNo}</div>
+            <div class="row__meta" style="margin-top:6px;">
+              <span class="star">${STAR_SVG}<span>${c.rating.toFixed(1)}</span><span class="count">(${c.reviewCount})</span></span>
+              <span class="meta-divider">·</span>
+              <span class="respond">평균 응답 ${c.respondMins}분</span>
+            </div>
           </div>
         </div>
         <div class="sheet__metrics">
           <div class="metric"><div class="metric__value">${c.career}년</div><div class="metric__label">경력</div></div>
           <div class="metric"><div class="metric__value">${c.consultCount.toLocaleString()}</div><div class="metric__label">누적 상담</div></div>
-          <div class="metric"><div class="metric__value">${c.avgRate.toFixed(2)}%</div><div class="metric__label">평균 금리</div></div>
+          <div class="metric"><div class="metric__value">${brokerCountOf(c).toLocaleString()}</div><div class="metric__label">대출 중개 건수</div></div>
         </div>
         <div class="sheet__section">
           <div class="sheet__section-label">전문 분야</div>

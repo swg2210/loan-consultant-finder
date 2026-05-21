@@ -3,6 +3,14 @@
 //  index.html, consultants.html 에서 공유
 //  이미지: assets/consultants/{id}.png (없으면 surname fallback)
 // ─────────────────────────────────────────────────
+
+// 대출 중개 건수 — 누적 상담의 35~55% 사이 결정적 값
+window.brokerCountOf = function (c) {
+  const seed = (c.id || '').split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+  const ratio = 0.35 + (seed % 21) / 100;
+  return Math.round(c.consultCount * ratio);
+};
+
 window.CONSULTANTS_DATA = [
   // ── 기존 6명 (이미지 있음) ──
   { id:'kim-seoyoon', surname:'김', name:'김서윤', bank:'shinhan',
