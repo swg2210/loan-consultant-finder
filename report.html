@@ -238,6 +238,12 @@ html, body {
 
   // iframe 안 .sheet / .sheet-backdrop 을 외부 스크롤 좌표 기준으로 재배치
   // (position:fixed 가 iframe 내 뷰포트에 고정되는 문제 해결)
+  // 시트는 내부 스크롤 없이 전체 콘텐츠 높이로 그리고, iframe 자체를 늘려서
+  // 외부 페이지 스크롤만으로 시트 끝까지 볼 수 있게 함.
+  let sheetAnchorTop = null; // 시트 연 시점의 문서 좌표 (스크롤해도 고정)
+  let baseIframeHeight = 0;  // 시트 열기 전 iframe 본래 높이
+  let sheetWasOpen = false;
+
   function syncSheetPositions() {
     const doc = frame.contentDocument;
     if (!doc) return;
@@ -256,19 +262,35 @@ html, body {
       s.style.position = 'absolute';
       s.style.left = '50%';
       s.style.bottom = 'auto';
-      // iframe 안의 vh 단위는 iframe 전체 높이 기준이라 부풀어오르므로 외부 viewport 기준으로 강제
-      s.style.maxHeight = Math.floor(viewH * 0.85) + 'px';
-      s.style.overflowY = 'auto';
+      // 내부 스크롤 제거 — 외부 스크롤만 사용
+      s.style.maxHeight = 'none';
+      s.style.overflowY = 'visible';
+      s.style.height = 'auto';
       const isOpen = s.classList.contains('open');
-      const h = s.offsetHeight || 0;
+      s.style.transform = 'translateX(-50%)';
       if (isOpen) {
-        s.style.transform = 'translateX(-50%)';
-        s.style.top = (visibleTop + viewH - h) + 'px';
+        // 닫힘→열림 전환 시점에만 anchor 설정 (스크롤 시엔 유지)
+        if (!sheetWasOpen) {
+          sheetAnchorTop = visibleTop + 24;
+          const curIframeH = parseInt(frame.style.height, 10) || 0;
+          baseIframeHeight = curIframeH;
+        }
+        s.style.top = sheetAnchorTop + 'px';
+        // iframe 을 시트 끝까지 늘려 외부 스크롤로 볼 수 있게
+        const sheetH = s.offsetHeight || 0;
+        const needed = sheetAnchorTop + sheetH + 40;
+        const curIframeH = parseInt(frame.style.height, 10) || 0;
+        if (needed > curIframeH) frame.style.height = needed + 'px';
       } else {
-        // 화면 아래로 숨김
-        s.style.transform = 'translateX(-50%)';
         s.style.top = (visibleTop + viewH + 100) + 'px';
+        // 닫힘 전환 시 iframe 원래 높이로 복원
+        if (sheetWasOpen && baseIframeHeight) {
+          frame.style.height = baseIframeHeight + 'px';
+          baseIframeHeight = 0;
+          sheetAnchorTop = null;
+        }
       }
+      sheetWasOpen = isOpen;
     });
   }
 
