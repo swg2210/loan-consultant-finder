@@ -106,7 +106,7 @@ html, body {
   border-radius: 14px;
   box-shadow: 0 0 0 4px rgba(0, 222, 90, 0.25), 0 8px 24px rgba(0,0,0,0.15);
   background: rgba(0, 222, 90, 0.06);
-  animation: spot-pulse 1.4s ease-in-out infinite;
+  animation: spot-pulse 1.4s ease-in-out 2 forwards;
   transition: all 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 @keyframes spot-pulse {
@@ -117,6 +117,10 @@ html, body {
     box-shadow: 0 0 0 6px rgba(0, 222, 90, 0.15), 0 0 0 16px rgba(0, 222, 90, 0);
   }
 }
+.spot.is-fading, .pin.is-fading {
+  opacity: 0 !important;
+  transition: opacity 400ms ease-out;
+}
 .pin {
   position: absolute;
   background: var(--primary-700); color: #fff;
@@ -125,7 +129,7 @@ html, body {
   white-space: nowrap;
   transform: translate(-50%, calc(-100% - 8px));
   box-shadow: 0 4px 12px rgba(0, 168, 71, 0.4);
-  animation: pin-bounce 1.2s ease-in-out infinite;
+  animation: pin-bounce 1.2s ease-in-out 2;
 }
 .pin::after {
   content: ''; position: absolute; left: 50%; bottom: -5px;
@@ -240,6 +244,17 @@ html, body {
         if (pinEl) pinEl.style.opacity = '1';
         placeMarker(spotEl, pinEl, el);
       }, 350 + i * 250));
+
+      // 펄스 2회 후 페이드 아웃 (1.4s × 2 = 2.8s + 등장 지연)
+      const fadeStart = 350 + i * 250 + 2800;
+      timers.push(setTimeout(() => {
+        spotEl.classList.add('is-fading');
+        if (pinEl) pinEl.classList.add('is-fading');
+      }, fadeStart));
+      timers.push(setTimeout(() => {
+        spotEl.remove();
+        if (pinEl) pinEl.remove();
+      }, fadeStart + 450));
     });
 
     scrollHandler = () => {
@@ -286,7 +301,10 @@ html, body {
   });
 
   frame.addEventListener('load', () => {
+    // iframe 내부에서 페이지가 바뀌면 항상 기존 강조는 제거
+    if (!pendingTargets) clearOverlay();
     if (pendingTargets) {
+      clearOverlay();
       setTimeout(() => {
         highlightTargets(pendingTargets);
         pendingTargets = null;
