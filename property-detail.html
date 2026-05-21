@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
@@ -8,7 +8,7 @@
   <style>
     /* ─── Tokens ──────────────────────────────────── */
     :root {
-      --primary: #03C75A;
+      --primary: #00DE5A;
       --primary-700: #00A847;
       --info-bg: #E6FAEE;
       --red: #F04452;
@@ -127,7 +127,7 @@
 
     /* 가격 분포 */
     .price-range{margin:24px 20px 12px; position:relative; padding-top:60px;}
-    .price-range__bar{height:8px; border-radius:4px; background:linear-gradient(90deg,#CCEFD7,#7AD89A,#03C75A); position:relative;}
+    .price-range__bar{height:8px; border-radius:4px; background:linear-gradient(90deg,#CCEFD7,#7AD89A,#00DE5A); position:relative;}
     .price-range__marker{position:absolute; top:-22px; transform:translateX(-50%); background:var(--gray-900); color:#fff; font-size:11px; font-weight:700; padding:4px 8px; border-radius:6px; white-space:nowrap;}
     .price-range__marker::after{content:''; position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; border-top:4px solid var(--gray-900);}
     .price-range__labels{margin-top:10px; display:flex; justify-content:space-between; font-size:12px; font-weight:700; color:var(--gray-700);}
@@ -152,7 +152,7 @@
     /* 중개사 */
     .broker-card{margin:12px 20px 16px; padding:16px; background:var(--gray-50); border:1px solid var(--gray-200); border-radius:var(--radius-card);}
     .broker-card__top{display:flex; align-items:center; gap:12px;}
-    .broker-card__avatar{width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,#7AD89A,#03C75A); color:#1E1E23; font-weight:800; font-size:17px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+    .broker-card__avatar{width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg,#7AD89A,#00DE5A); color:#1E1E23; font-weight:800; font-size:17px; display:flex; align-items:center; justify-content:center; flex-shrink:0;}
     .broker-card__info{flex:1; min-width:0;}
     .broker-card__name{font-size:15px; font-weight:800;}
     .broker-card__office{font-size:12.5px; color:var(--gray-500); font-weight:600; margin-top:2px;}
@@ -458,9 +458,9 @@
       const path = arr => arr.map((v, i) => `${i ? 'L' : 'M'}${sx(i)} ${sy(v)}`).join(' ');
       svg.innerHTML = `
         ${grid}
-        <path d="${path(sale)}" fill="none" stroke="#03C75A" stroke-width="2.5" stroke-linejoin="round"/>
+        <path d="${path(sale)}" fill="none" stroke="#00DE5A" stroke-width="2.5" stroke-linejoin="round"/>
         <path d="${path(jeon)}" fill="none" stroke="#7AD89A" stroke-width="2.5" stroke-linejoin="round"/>
-        ${sale.map((v, i) => `<circle cx="${sx(i)}" cy="${sy(v)}" r="3" fill="#03C75A"/>`).join('')}
+        ${sale.map((v, i) => `<circle cx="${sx(i)}" cy="${sy(v)}" r="3" fill="#00DE5A"/>`).join('')}
         ${jeon.map((v, i) => `<circle cx="${sx(i)}" cy="${sy(v)}" r="3" fill="#7AD89A"/>`).join('')}
         <line x1="${PAD}" y1="${sy(myY)}" x2="${W - PAD}" y2="${sy(myY)}" stroke="#F04452" stroke-width="1.5" stroke-dasharray="4 3"/>
         <circle cx="${sx(4)}" cy="${sy(myY)}" r="5" fill="#F04452" stroke="#fff" stroke-width="2"/>
