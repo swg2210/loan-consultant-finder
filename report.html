@@ -227,6 +227,8 @@ html, body {
     try {
       const doc = frame.contentDocument;
       if (!doc) return;
+      // 시트가 열린 동안에는 syncSheetPositions 가 iframe 높이를 관리한다
+      if (doc.querySelector('.sheet.open')) return;
       injectHeightFix(doc);
       // 측정 전 iframe 높이를 0으로 줄여서 100vh 영향 제거 후 실제 콘텐츠 높이 측정
       frame.style.height = '0px';
